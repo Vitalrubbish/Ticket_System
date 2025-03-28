@@ -1,0 +1,4 @@
+#ifndef HOURMINUTE_H
+#define HOURMINUTE_H
+
+#endif //HOURMINUTE_H

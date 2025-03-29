@@ -7,6 +7,11 @@ Tokens::Tokens(const std::string &str) {
     while (str[cur] != ' ') {
         ++cur;
     }
+    timeSlot = str.substr(pre, cur - pre);
+    pre = ++cur;
+    while (str[cur] != ' ') {
+        ++cur;
+    }
     op_name = str.substr(pre, cur - pre);
     pre = cur + 1;
     bool flag = false;

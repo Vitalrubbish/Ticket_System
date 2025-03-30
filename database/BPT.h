@@ -96,5 +96,7 @@ public:
     void removeData(const T & );
 
     sjtu::vector<T> findData(const T& );
+
+    void modifyData(const T&, const T& );
 };
 #endif //BPT_H

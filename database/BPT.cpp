@@ -470,7 +470,7 @@ sjtu::vector<T> BPT<T>::findData(const T& obj) {
     while (true) {
         for (int i = 0; i < cur.size; i++) {
             if (obj == cur.storage[i]) {
-                std::cout << cur.storage[i].value << " ";
+                ret.push_back(cur.storage[i]);
             }
             else if (obj < cur.storage[i]) {
                 return ret;
@@ -484,6 +484,34 @@ sjtu::vector<T> BPT<T>::findData(const T& obj) {
         }
     }
     return ret;
+}
+
+template <typename T>
+void BPT<T>::modifyData(const T& obj, const T& newObj) {
+    int p = root;
+    while (true) {
+        readNode(p);
+        if (cur.is_leaf) {
+            break;
+        }
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (obj <= cur.storage[mid]) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        p = cur.son[l];
+    }
+    for (int i = 0; i < cur.size; i++) {
+        if (obj == cur.storage[i]) {
+            cur.storage[i] = newObj;
+        }
+    }
+    writeNode(cur, cur.index);
 }
 
 template class BPT<User>;

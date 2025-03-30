@@ -4,31 +4,30 @@
 #include <string>
 #include <cstring>
 #include <fstream>
+#include "../include/User.h"
+#include "../STLite/vector.hpp"
 
-constexpr int node_size = 8;  //into debug mode you can modify node_size to 4
-
-template <typename T>
-struct Node {
-    int index = -1;
-    int size = 0;
-    T storage[node_size + 1]{};
-    bool is_leaf = true;
-
-    int father = -1;
-    int son[node_size + 1]{};
-    int prev = -1;
-    int next = -1;
-};
-
-
+constexpr int node_size = 100;  //into debug mode you can modify node_size to 4
 
 template <typename T>
 class BPT {
+    struct Node {
+        int index = -1;
+        int size = 0;
+        T storage[node_size + 1]{};
+        bool is_leaf = true;
+
+        int father = -1;
+        int son[node_size + 1]{};
+        int prev = -1;
+        int next = -1;
+    };
+
     int root = -1;
     int head = -1;
     int new_id = 0;
 
-    Node<T> cur{};
+    Node cur{};
 
     std::fstream basic_file;
     std::fstream node_file;
@@ -61,7 +60,6 @@ public:
             basic_file.read(reinterpret_cast<char*> (&root), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
-            node_file.seekp(root * sizeof(Node<T>));
         }
         basic_file.close();
     }
@@ -72,14 +70,12 @@ public:
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
         basic_file.close();
-
-        node_file.seekp(root * sizeof(Node<T>));
         node_file.close();
     }
 
     void readNode(const int & );
 
-    void writeNode(Node<T> , const int & );
+    void writeNode(Node , const int & );
 
     void splitNode();
 
@@ -95,11 +91,10 @@ public:
 
     void combine();
 
-    void addData(const T & );
+    int addData(const T & );
 
     void removeData(const T & );
 
-    void findData(const std::string & );
-
+    sjtu::vector<T> findData(const T& );
 };
 #endif //BPT_H

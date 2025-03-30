@@ -2,21 +2,21 @@
 
 template<typename T>
 void BPT<T>::readNode(const int &index_) {
-    node_file.seekp(index_ * sizeof(Node<T>));
-    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node<T>));
+    node_file.seekp(index_ * sizeof(Node));
+    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node));
 }
 
 template<typename T>
-void BPT<T>::writeNode(Node<T> node, const int &index_) {
-    node_file.seekp(index_ * sizeof(Node<T>));
-    node_file.write(reinterpret_cast<char*>(&node), sizeof(Node<T>));
+void BPT<T>::writeNode(Node node, const int &index_) {
+    node_file.seekp(index_ * sizeof(Node));
+    node_file.write(reinterpret_cast<char*>(&node), sizeof(Node));
 }
 
 template<typename T>
 void BPT<T>::splitNode() {
     int mid = node_size / 2;
 
-    Node<T> new_node{};
+    Node new_node{};
     new_node.index = new_id;
     new_node.is_leaf = cur.is_leaf;
     new_node.father = cur.father;
@@ -24,7 +24,7 @@ void BPT<T>::splitNode() {
 
     if (cur.is_leaf) {
         if (cur.next != -1) {
-            Node<T> cur_node = cur;
+            Node cur_node = cur;
             readNode(cur.next);
             cur.prev = new_node.index;
             writeNode(cur, cur.index);
@@ -43,9 +43,9 @@ void BPT<T>::splitNode() {
     new_node.size = cur.size - mid;
     cur.size = mid;
 
-    Node<T> original_node = cur;
+    Node original_node = cur;
     if (original_node.index == root) {
-        Node<T> new_root{};
+        Node new_root{};
         new_root.index = new_id;
         ++new_id;
         root = new_root.index;
@@ -130,8 +130,8 @@ void BPT<T>::flush(int st) {
     if (st == root) {
         return;
     }
-    Node<T> st_node = cur;
-    Node<T> son_node = cur;
+    Node st_node = cur;
+    Node son_node = cur;
     readNode(cur.father);
     while (!flag) {
         for (int i = 0; i < cur.size; i++) {
@@ -159,7 +159,7 @@ template<typename T>
 bool BPT<T>::borrowFromRight() {
     bool flag = false;
     int depth_count = 0;
-    Node<T> cur_node = cur;
+    Node cur_node = cur;
 
     while (true) {
         if (cur.index == root) {
@@ -221,7 +221,7 @@ template<typename T>
 bool BPT<T>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
-    Node<T> cur_node = cur;
+    Node cur_node = cur;
     while (true) {
         if (cur.index == root) {
             cur = cur_node;
@@ -281,7 +281,7 @@ bool BPT<T>::borrowFromLeft() {
 
 template<typename T>
 void BPT<T>::combine() {
-    Node<T> cur_node = cur;
+    Node cur_node = cur;
 
     readNode(cur.father);
     for (int i = 0; i < cur.size; i++) {
@@ -293,7 +293,7 @@ void BPT<T>::combine() {
                 readNode(cur.son[i - 1]);
                 if (cur.is_leaf) {
                     cur.next = cur_node.next;
-                    Node<T> tmp = cur;
+                    Node tmp = cur;
                     if (cur_node.next != -1) {
                         readNode(cur_node.next);
                         cur.prev = tmp.index;
@@ -341,7 +341,7 @@ void BPT<T>::combine() {
 }
 
 template<typename T>
-void BPT<T>::addData(const T &data) {
+int BPT<T>::addData(const T &data) {
     int p = root, q = -1;
     while (true) {
         readNode(p);
@@ -366,7 +366,6 @@ void BPT<T>::addData(const T &data) {
         if (l == cur.size) {
             l = cur.size - 1;
         }
-
         q = p;
         p = cur.son[l];
     }
@@ -381,8 +380,9 @@ void BPT<T>::addData(const T &data) {
         while (cur.size > node_size) {
             splitNode();
         }
+        return 0;
     }
-
+    return -1;
 }
 
 template <typename T>
@@ -443,45 +443,37 @@ void BPT<T>::removeData(const T &data) {
             break;
         }
     }
-
 }
 
-/*template <typename T>
-void BPT<T>::findData(const std::string &str) {
+template <typename T>
+sjtu::vector<T> BPT<T>::findData(const T& obj) {
+    sjtu::vector<T> ret;
     int p = root;
     while (true) {
         readNode(p);
         if (cur.is_leaf) {
             break;
         }
-
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            if (_key <= cur.storage[mid].key) {
+            if (obj <= cur.storage[mid]) {
                 r = mid - 1;
             }
             else {
                 l = mid + 1;
             }
         }
-
-        if (l == cur.size) {
-            std::cout << "null" << '\n';
-            return;
-        }
         p = cur.son[l];
     }
 
-    bool output = false;
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (_key == cur.storage[i].key) {
+            if (obj == cur.storage[i]) {
                 std::cout << cur.storage[i].value << " ";
-                output = true;
             }
-            else if (_key < cur.storage[i].key) {
-                goto End;
+            else if (obj < cur.storage[i]) {
+                return ret;
             }
         }
         if (cur.next != -1) {
@@ -491,10 +483,7 @@ void BPT<T>::findData(const std::string &str) {
             break;
         }
     }
+    return ret;
+}
 
-    End:;
-    if (!output) {
-        std::cout << "null";
-    }
-    std::cout << "\n";
-}*/
+template class BPT<User>;

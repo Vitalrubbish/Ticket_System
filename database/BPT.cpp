@@ -515,3 +515,4 @@ void BPT<T>::modifyData(const T& obj, const T& newObj) {
 }
 
 template class BPT<User>;
+template class BPT<Train>;

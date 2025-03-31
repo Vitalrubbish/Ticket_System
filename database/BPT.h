@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include "../include/User.h"
+#include "../include/Train.h"
 #include "../STLite/vector.hpp"
 
 constexpr int node_size = 100;  //into debug mode you can modify node_size to 4

@@ -3,10 +3,12 @@
 #include <fstream>
 #include "./include/tokenscanner.h"
 #include "./include/User.h"
-#include "./STLite/vector.hpp"
+#include "./include/Train.h"
 #include "./include/tools.h"
+#include "./STLite/vector.hpp"
 
 BPT<User> userBPT("user");
+BPT<Train> trainBPT("train");
 
 std::fstream system_file;
 extern int newTicketInfoIndex = 0;
@@ -122,6 +124,33 @@ int main() {
                               << vec2[0].name << ' '
                               << vec2[0].mailAddr << ' '
                               << vec2[0].privilege << '\n';
+                }
+                else {
+                    std::cout << -1 << '\n';
+                }
+            }
+            else {
+                std::cout << -1 << '\n';
+            }
+        }
+        if (tokens.op_name == "add_train") {
+            sjtu::vector<Train> vec = trainBPT.findData(Train{tokens._i});
+            if (vec.empty()) {
+                Train newTrain{tokens._i, tokens._n, tokens._m, tokens._s, tokens._p,
+                    tokens._x, tokens._t, tokens._o, tokens._d, tokens._y};
+                trainBPT.addData(newTrain);
+                std::cout << 0 << '\n';
+            }
+            else {
+                std::cout << -1 << '\n';
+            }
+        }
+        if (tokens.op_name == "delete_train") {
+            sjtu::vector<Train> vec = trainBPT.findData(Train{tokens._i});
+            if (!vec.empty()) {
+                if (!vec[0].release) {
+                    trainBPT.removeData(vec[0]);
+                    std::cout << 0 << '\n';
                 }
                 else {
                     std::cout << -1 << '\n';

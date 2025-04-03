@@ -213,7 +213,7 @@ int main() {
                     if (vec[0].release) {
                         sjtu::vector<int> soldT = ticketInfo.readTicketInfo(vec[0].ticketInfoIndex + vec[0].stationNum * (md - vec[0].saleDate[0]), vec[0].stationNum);
                         std::cout << vec[0].stations[0] << " xx-xx xx:xx -> " << md << ' '
-                                  << vec[0].setOffTime[0] << vec[0].prices[0] << vec[0].seatNum - soldT[0] << '\n';
+                                  << vec[0].setOffTime[0] << ' ' << vec[0].prices[0] << ' ' << vec[0].seatNum - soldT[0] << '\n';
                         for (int i = 1; i < vec[0].stationNum - 1; i++) {
                             std::cout << vec[0].stations[i] << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
                                       << md + vec[0].setOffTime[i].dd << ' ' << vec[0].setOffTime[i] << ' ' << vec[0].prices[i] << ' '
@@ -224,7 +224,7 @@ int main() {
                     }
                     else {
                         std::cout << vec[0].stations[0] << " xx-xx xx:xx -> " << md << ' '
-                                  << vec[0].setOffTime[0] << vec[0].prices[0] << vec[0].seatNum << '\n';
+                                  << vec[0].setOffTime[0] << ' ' << vec[0].prices[0] << ' ' << vec[0].seatNum << '\n';
                         for (int i = 1; i < vec[0].stationNum - 1; i++) {
                             std::cout << vec[0].stations[i] << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
                                       << md + vec[0].setOffTime[i].dd << ' ' << vec[0].setOffTime[i] << ' ' << vec[0].prices[i] << ' '
@@ -415,7 +415,7 @@ int main() {
                         sjtu::vector<PendingOrder> pOrders = pendingOrderBPT.findData(PendingOrder{curOrder.trainID});
                         for (std::size_t i = 0; i < pOrders.size(); i++) {
                             PendingOrder pOrder = pOrders[i];
-                            for (int j = 0; j < vec1[0].stationNum; i++) {
+                            for (int j = 0; j < vec1[0].stationNum; j++) {
                                 if (strcmp(vec1[0].stations[j], pOrder.setOffStation) == 0) {startIndex = j;}
                                 if (strcmp(vec1[0].stations[i], pOrder.arriveStation) == 0) {endIndex = j;}
                             }
@@ -468,8 +468,8 @@ int main() {
             std::cout << 0 << '\n';
         }
     }
-    flush();
-    /*userBPT.clear();
+    /*flush();
+    userBPT.clear();
     trainBPT.clear();
     stationBPT.clear();
     orderBPT.clear();

@@ -1,5 +1,7 @@
 #ifndef HOURMINUTE_H
 #define HOURMINUTE_H
+#include <iostream>
+
 struct HourMinute {
     int dd; // 存储当前日期和列车始发日期的差值
     int hh;
@@ -26,5 +28,9 @@ struct HourMinute {
     bool operator>= (const HourMinute &other) const;
 
     HourMinute operator+ (const int &t) const;
+
+    int operator- (const HourMinute& other) const;
+
+    friend std::ostream& operator<< (std::ostream& os, const HourMinute& obj);
 };
 #endif //HOURMINUTE_H

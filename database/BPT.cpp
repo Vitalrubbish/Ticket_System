@@ -486,6 +486,129 @@ sjtu::vector<T> BPT<T>::findData(const T& obj) {
     return ret;
 }
 
+template<>
+sjtu::vector<StationInfo> BPT<StationInfo>::findData(const StationInfo& obj) {
+    sjtu::vector<StationInfo> ret;
+    int p = root;
+    while (true) {
+        readNode(p);
+        if (cur.is_leaf) {
+            break;
+        }
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (strcmp(obj.station, cur.storage[mid].station) <= 0) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        p = cur.son[l];
+    }
+
+    while (true) {
+        for (int i = 0; i < cur.size; i++) {
+            if (strcmp(obj.station, cur.storage[i].station) == 0) {
+                ret.push_back(cur.storage[i]);
+            }
+            else if (strcmp(obj.station, cur.storage[i].station) < 0) {
+                return ret;
+            }
+        }
+        if (cur.next != -1) {
+            readNode(cur.next);
+        }
+        else {
+            break;
+        }
+    }
+    return ret;
+}
+
+template<>
+sjtu::vector<Order> BPT<Order>::findData(const Order& obj) {
+    sjtu::vector<Order> ret;
+    int p = root;
+    while (true) {
+        readNode(p);
+        if (cur.is_leaf) {
+            break;
+        }
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (strcmp(obj.username, cur.storage[mid].username) <= 0) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        p = cur.son[l];
+    }
+
+    while (true) {
+        for (int i = 0; i < cur.size; i++) {
+            if (strcmp(obj.username, cur.storage[i].username) == 0) {
+                ret.push_back(cur.storage[i]);
+            }
+            else if (strcmp(obj.username, cur.storage[i].username) < 0) {
+                return ret;
+            }
+        }
+        if (cur.next != -1) {
+            readNode(cur.next);
+        }
+        else {
+            break;
+        }
+    }
+    return ret;
+}
+
+template<>
+sjtu::vector<PendingOrder> BPT<PendingOrder>::findData(const PendingOrder& obj) {
+    sjtu::vector<PendingOrder> ret;
+    int p = root;
+    while (true) {
+        readNode(p);
+        if (cur.is_leaf) {
+            break;
+        }
+        int l = 0, r = cur.size - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (strcmp(obj.trainID, cur.storage[mid].trainID) <= 0) {
+                r = mid - 1;
+            }
+            else {
+                l = mid + 1;
+            }
+        }
+        p = cur.son[l];
+    }
+
+    while (true) {
+        for (int i = 0; i < cur.size; i++) {
+            if (strcmp(obj.trainID, cur.storage[i].trainID) == 0) {
+                ret.push_back(cur.storage[i]);
+            }
+            else if (strcmp(obj.trainID, cur.storage[i].trainID) < 0) {
+                return ret;
+            }
+        }
+        if (cur.next != -1) {
+            readNode(cur.next);
+        }
+        else {
+            break;
+        }
+    }
+    return ret;
+}
+
 template <typename T>
 void BPT<T>::modifyData(const T& obj, const T& newObj) {
     int p = root;
@@ -516,3 +639,6 @@ void BPT<T>::modifyData(const T& obj, const T& newObj) {
 
 template class BPT<User>;
 template class BPT<Train>;
+template class BPT<StationInfo>;
+template class BPT<Order>;
+template class BPT<PendingOrder>;

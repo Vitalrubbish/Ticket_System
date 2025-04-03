@@ -23,6 +23,9 @@ HourMinute &HourMinute::operator=(const HourMinute& other) {
 }
 
 bool HourMinute::operator< (const HourMinute &other) const {
+    if (dd != other.dd) {
+        return dd < other.dd;
+    }
     if (hh != other.hh) {
         return hh < other.hh;
     }
@@ -30,6 +33,9 @@ bool HourMinute::operator< (const HourMinute &other) const {
 }
 
 bool HourMinute::operator> (const HourMinute &other) const {
+    if (dd != other.dd) {
+        return dd > other.dd;
+    }
     if (hh != other.hh) {
         return hh > other.hh;
     }
@@ -60,4 +66,16 @@ HourMinute HourMinute::operator+ (const int &t) const {
     ret.dd += ret.hh / 24;
     ret.hh %= 24;
     return ret;
+}
+
+int HourMinute::operator- (const HourMinute& other) const {
+    return (dd - other.dd) * 1440 + (hh - other.hh) * 60 + (mm - other.mm);
+}
+
+std::ostream& operator<< (std::ostream& os, const HourMinute& obj) {
+    if (obj.hh < 10) {os << 0;}
+    os << obj.hh << ':';
+    if (obj.mm < 10) {os << 0;}
+    os << obj.mm;
+    return os;
 }

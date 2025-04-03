@@ -48,6 +48,16 @@ MonthDate MonthDate::operator- (int d) const {
     return ret;
 }
 
+MonthDate MonthDate::operator+ (int d) const {
+    MonthDate ret = *this;
+    ret.dd += d;
+    while (ret.dd > days[ret.mm]) {
+        ret.dd -= days[ret.mm];
+        ret.mm++;
+    }
+    return ret;
+}
+
 int MonthDate::operator- (const MonthDate& other) const {
     int ret = 0;
     if (mm == other.mm) {
@@ -60,4 +70,12 @@ int MonthDate::operator- (const MonthDate& other) const {
         }
     }
     return ret;
+}
+
+std::ostream& operator<<(std::ostream& os, const MonthDate& obj) {
+    if (obj.mm < 10) {os << 0;}
+    os << obj.mm << '-';
+    if (obj.dd < 10) {os << 0;}
+    os << obj.dd;
+    return os;
 }

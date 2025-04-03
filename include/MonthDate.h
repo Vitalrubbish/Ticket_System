@@ -1,5 +1,6 @@
 #ifndef MONTHDATE_H
 #define MONTHDATE_H
+#include <iostream>
 
 struct MonthDate {
     int mm;
@@ -23,6 +24,10 @@ struct MonthDate {
 
     MonthDate operator- (int d) const;
 
+    MonthDate operator+ (int d) const;
+
     int operator- (const MonthDate& other) const;
+
+    friend std::ostream& operator<<(std::ostream& os, const MonthDate& obj);
 };
 #endif //MONTHDATE_H

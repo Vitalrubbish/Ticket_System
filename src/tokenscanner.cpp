@@ -35,6 +35,7 @@ Tokens::Tokens(const std::string &str) {
                 if (token == "-o") {tokenType[length] = TokenType::_o;}
                 if (token == "-d") {tokenType[length] = TokenType::_d;}
                 if (token == "-y") {tokenType[length] = TokenType::_y;}
+                if (token == "-f") {tokenType[length] = TokenType::_f;}
             }
             else {
                 flag = false;
@@ -51,6 +52,7 @@ Tokens::Tokens(const std::string &str) {
                 if (tokenType[length] == TokenType::_o) {_o = token;}
                 if (tokenType[length] == TokenType::_d) {_d = token;}
                 if (tokenType[length] == TokenType::_y) {_y = token;}
+                if (tokenType[length] == TokenType::_f) {_f = token;}
                 ++length;
             }
         }

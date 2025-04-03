@@ -1,12 +1,13 @@
 #ifndef BPT_H
 #define BPT_H
-#include <iostream>
 #include <string>
 #include <cstring>
 #include <fstream>
 #include "../include/User.h"
 #include "../include/Train.h"
-#include "../STLite/vector.hpp"
+#include "../include/StationInfo.h"
+#include "../include/Order.h"
+#include "../STLite/vector/vector.hpp"
 
 constexpr int node_size = 100;  //into debug mode you can modify node_size to 4
 
@@ -72,6 +73,11 @@ public:
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
         basic_file.close();
         node_file.close();
+    }
+
+    void clear() {
+        std::remove(basic_file_name.c_str());
+        std::remove(node_file_name.c_str());
     }
 
     void readNode(const int & );

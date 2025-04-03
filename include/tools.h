@@ -21,11 +21,12 @@ inline sjtu::vector<std::string> split(const std::string& str,const char& c) {
     sjtu::vector<std::string> ret;
     std::size_t pre = 0;
     for (std::size_t i = 0; i < str.size(); i++) {
-        if (str[i] == c || i == str.size() - 1) {
+        if (str[i] == c) {
             ret.push_back(str.substr(pre, i - pre));
             pre = i + 1;
         }
     }
+    ret.push_back(str.substr(pre, str.size() - pre));
     return ret;
 }
 

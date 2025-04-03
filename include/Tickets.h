@@ -52,8 +52,8 @@ struct TransferTicket {
 };
 
 inline std::ostream& operator<< (std::ostream& os, const Ticket& obj) {
-    os << obj.trainID << ' ' << obj.setOffStation << ' ' << obj.setOffDate << obj.setOffTime << " -> "
-       << obj.arriveStation << ' ' << obj.setOffDate - obj.setOffTime.dd + obj.arriveTime.dd
+    os << obj.trainID << ' ' << obj.setOffStation << ' ' << obj.setOffDate << ' ' << obj.setOffTime << " -> "
+       << obj.arriveStation << ' ' << obj.setOffDate - obj.setOffTime.dd + obj.arriveTime.dd << ' '
        << obj.arriveTime << ' ' << obj.price << ' ' << obj.maxSeat;
     return os;
 }

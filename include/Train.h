@@ -6,7 +6,7 @@
 struct Train {
     char trainID[21]{};
     int stationNum = -1;
-    char stations[101][21]{};
+    char stations[101][31]{};
     int seatNum = -1;
     int prices[101]{}; // 处理成前缀和
     HourMinute setOffTime[101]{};

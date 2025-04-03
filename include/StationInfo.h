@@ -4,7 +4,7 @@
 #include <string>
 #include "HourMinute.h"
 struct StationInfo {
-    char station[21]{};
+    char station[31]{};
     char trainID[21]{};
     HourMinute arriveTime{};
     HourMinute setOffTime{};

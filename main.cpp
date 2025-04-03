@@ -189,8 +189,10 @@ int main() {
                     newTicketInfoIndex += len;
                     trainBPT.modifyData(Train{tokens._i}, vec[0]);
                     sjtu::vector<int> soldTicket;
-                    for (int i = 0; i < len; i++) {soldTicket.push_back(0);}
-                    ticketInfo.writeTicketInfo(vec[0].ticketInfoIndex, soldTicket);
+                    for (int i = 0; i < vec[0].stationNum; i++) {soldTicket.push_back(0);}
+                    for (int i = 0; i < vec[0].saleDate[1] - vec[0].saleDate[0] + 1; i++) {
+                        ticketInfo.writeTicketInfo(vec[0].ticketInfoIndex + i * vec[0].stationNum, soldTicket);
+                    }
                     std::cout << 0 << '\n';
                 }
                 else {
@@ -243,8 +245,8 @@ int main() {
         if (tokens.op_name == "query_ticket") {
             sjtu::vector<Ticket> vec = queryTicket(tokens._s, tokens._t, tokens._d);
             std::cout << vec.size() << '\n';
-            if (tokens._p == "time") {sortByTime(vec);}
-            if (tokens._p == "cost") {sortByCost(vec);}
+            if (tokens._p == "cost") {vec = sortByCost(vec);}
+            else {vec = sortByTime(vec);}
             for (auto & i : vec) {
                 std::cout << i << '\n';
             }
@@ -339,6 +341,10 @@ int main() {
                     newOrder.price = vec1[0].prices[endIndex] - vec1[0].prices[startIndex];
                     newOrder.seats = stringToInt(tokens._n);
                     newOrder.orderIndex = newOrderIndex++;
+                    if (md - _setOffTime.dd - vec1[0].saleDate[0] < 0 || md - _setOffTime.dd > vec1[0].saleDate[1]) {
+                        std::cout << -1 << '\n';
+                        continue;
+                    }
                     sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(vec1[0].ticketInfoIndex + (md - _setOffTime.dd - vec1[0].saleDate[0]) * vec1[0].stationNum, vec1[0].stationNum);
                     int _maxSeat = -1;
                     for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}
@@ -347,6 +353,7 @@ int main() {
                         newOrder.orderStatus = OrderStatus::success;
                         for (int i = startIndex; i < endIndex; i++) {ticketI[i] += newOrder.seats;}
                         ticketInfo.writeTicketInfo(vec1[0].ticketInfoIndex + (md - _setOffTime.dd - vec1[0].saleDate[0]) * vec1[0].stationNum, ticketI);
+                        orderBPT.addData(newOrder);
                         std::cout << newOrder.price * newOrder.seats << '\n';
                     }
                     else if (tokens._p != "false") {
@@ -354,6 +361,7 @@ int main() {
                         PendingOrder newPendingOrder{tokens._u, tokens._i, tokens._f, tokens._t, md};
                         newPendingOrder.seats = newOrder.seats;
                         newPendingOrder.orderIndex = newOrder.orderIndex;
+                        orderBPT.addData(newOrder);
                         pendingOrderBPT.addData(newPendingOrder);
                         std::cout << "queue\n";
                     }
@@ -427,6 +435,7 @@ int main() {
                             }
                         }
                         ticketInfo.writeTicketInfo(vec1[0].ticketInfoIndex + (curOrder.setOffDate - curOrder.setOffTime.dd - vec1[0].saleDate[0]) * vec1[0].stationNum, ticketI);
+                        std::cout << 0 << '\n';
                     }
                     else if (orders[index - 1].orderStatus == OrderStatus::pending) {
                         sjtu::vector<PendingOrder> pOrders = pendingOrderBPT.findData(PendingOrder{curOrder.trainID});
@@ -435,6 +444,7 @@ int main() {
                                 pendingOrderBPT.removeData(pOrder);
                             }
                         }
+                        std::cout << 0 << '\n';
                     }
                     else {
                         std::cout << -1 << '\n';
@@ -465,6 +475,7 @@ int main() {
     orderBPT.clear();
     pendingOrderBPT.clear();
     std::remove("system_file");
+    std::remove("ticket_file");
 }
 
 sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, const std::string& _d) {

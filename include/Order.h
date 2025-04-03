@@ -8,8 +8,8 @@ enum class OrderStatus {success, pending, refunded};
 struct Order {
     char username[21]{};
     char trainID[21]{};
-    char setOffStation[21]{};
-    char arriveStation[21]{};
+    char setOffStation[31]{};
+    char arriveStation[31]{};
     MonthDate setOffDate{};
     HourMinute setOffTime{};
     HourMinute arriveTime{};

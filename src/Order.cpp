@@ -50,7 +50,7 @@ std::ostream& operator<< (std::ostream& os, const Order& obj) {
     if (obj.orderStatus == OrderStatus::success) {os << "[success] ";}
     if (obj.orderStatus == OrderStatus::pending) {os << "[pending] ";}
     if (obj.orderStatus == OrderStatus::refunded) {os << "[refunded] ";}
-    os << obj.trainID << ' ' << obj.setOffStation << ' ' << obj.setOffDate
+    os << obj.trainID << ' ' << obj.setOffStation << ' ' << obj.setOffDate << ' '
        << obj.setOffTime << " -> " << obj.arriveStation << ' '
        << obj.setOffDate - obj.setOffTime.dd + obj.arriveTime.dd << ' ' << obj.arriveTime << ' '
        << obj.price << ' ' << obj.seats;

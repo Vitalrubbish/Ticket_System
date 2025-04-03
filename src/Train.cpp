@@ -18,16 +18,16 @@ Train::Train(const std::string& _i, const std::string& _n, const std::string& _m
     }
     sjtu::vector<std::string> price = split(_p, '|');
     prices[0] = 0;
-    for (std::size_t i = 0; i < stationName.size(); i++) {
+    for (std::size_t i = 0; i < stationName.size() - 1; i++) {
         prices[i + 1] = prices[i] + stringToInt(price[i]);
     }
-    sjtu::vector<std::string> startT = split(_x, '|');
+    sjtu::vector<std::string> startT = split(_x, ':');
     sjtu::vector<std::string> travelT = split(_t, '|');
     sjtu::vector<std::string> spotOverT = split(_o, '|');
     setOffTime[0] = HourMinute{stringToInt(startT[0]), stringToInt(startT[1])};
     for (int i = 1; i < stationNum - 1; i++) {
         arriveTime[i] = setOffTime[i - 1] + stringToInt(travelT[i - 1]);
-        setOffTime[i] = arriveTime[i] + stringToInt(travelT[i - 1]);
+        setOffTime[i] = arriveTime[i] + stringToInt(spotOverT[i - 1]);
     }
     arriveTime[stationNum - 1] = setOffTime[stationNum - 2] + stringToInt(travelT[stationNum - 2]);
     sjtu::vector<std::string> saleD = split(_d, '|');

@@ -468,8 +468,8 @@ int main() {
             std::cout << 0 << '\n';
         }
     }
-    /*flush();
-    userBPT.clear();
+    flush();
+    /*userBPT.clear();
     trainBPT.clear();
     stationBPT.clear();
     orderBPT.clear();

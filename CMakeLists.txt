@@ -12,13 +12,25 @@ add_executable(code
         include/HourMinute.h
         include/MonthDate.h
         include/tools.h
+        include/User.h
+        include/Train.h
+        include/TicketInfo.h
+        include/StationInfo.h
+        include/Tickets.h
+        include/Order.h
 
         src/tokenscanner.cpp
         src/HourMinute.cpp
         src/MonthDate.cpp
         src/User.cpp
+        src/Train.cpp
+        src/StationInfo.cpp
+        src/Order.cpp
 
-        STLite/exceptions.hpp
-        STLite/utility.hpp
-        STLite/vector.hpp
+        STLite/vector/exceptions.hpp
+        STLite/vector/utility.hpp
+        STLite/vector/vector.hpp
+        STLite/map/exceptions.hpp
+        STLite/map/utility.hpp
+        STLite/map/map.hpp
 )

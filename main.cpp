@@ -469,13 +469,13 @@ int main() {
         }
     }
     flush();
-    userBPT.clear();
+    /*userBPT.clear();
     trainBPT.clear();
     stationBPT.clear();
     orderBPT.clear();
     pendingOrderBPT.clear();
     std::remove("system_file");
-    std::remove("ticket_file");
+    std::remove("ticket_file");*/
 }
 
 sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, const std::string& _d) {

@@ -105,5 +105,7 @@ public:
     sjtu::vector<T> findData(const T& );
 
     void modifyData(const T&, const T& );
+
+    void logout();
 };
 #endif //BPT_H

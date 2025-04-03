@@ -637,6 +637,25 @@ void BPT<T>::modifyData(const T& obj, const T& newObj) {
     writeNode(cur, cur.index);
 }
 
+template <>
+void BPT<User>::logout() {
+    if (head != -1) {
+        readNode(head);
+        while (true) {
+            for (int i = 0; i < cur.size; i++) {
+                cur.storage[i].login = false;
+            }
+            writeNode(cur, cur.index);
+            if (cur.next != -1) {
+                readNode(cur.next);
+            }
+            else {
+                break;
+            }
+        }
+    }
+}
+
 template class BPT<User>;
 template class BPT<Train>;
 template class BPT<StationInfo>;

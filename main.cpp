@@ -57,6 +57,7 @@ int main() {
         Tokens tokens{command};
         std::cout << tokens.timeSlot << " ";
         if (tokens.op_name == "exit") {
+            userBPT.logout();
             std::cout << "bye\n";
             break;
         }
@@ -153,11 +154,6 @@ int main() {
                 Train newTrain{tokens._i, tokens._n, tokens._m, tokens._s, tokens._p,
                     tokens._x, tokens._t, tokens._o, tokens._d, tokens._y};
                 trainBPT.addData(newTrain);
-                for (int i = 0; i < newTrain.stationNum; i++) {
-                    std::string stationN(newTrain.stations[i], strlen(newTrain.stations[i]));
-                    StationInfo newStationInfo{stationN, tokens._i, newTrain.arriveTime[i], newTrain.setOffTime[i]};
-                    stationBPT.addData(newStationInfo);
-                }
                 std::cout << 0 << '\n';
             }
             else {
@@ -188,6 +184,11 @@ int main() {
                     vec[0].ticketInfoIndex = newTicketInfoIndex;
                     newTicketInfoIndex += len;
                     trainBPT.modifyData(Train{tokens._i}, vec[0]);
+                    for (int i = 0; i < vec[0].stationNum; i++) {
+                        std::string stationN(vec[0].stations[i]);
+                        StationInfo newStationInfo{stationN, tokens._i, vec[0].arriveTime[i], vec[0].setOffTime[i]};
+                        stationBPT.addData(newStationInfo);
+                    }
                     sjtu::vector<int> soldTicket;
                     for (int i = 0; i < vec[0].stationNum; i++) {soldTicket.push_back(0);}
                     for (int i = 0; i < vec[0].saleDate[1] - vec[0].saleDate[0] + 1; i++) {
@@ -260,8 +261,8 @@ int main() {
                 std::string _trainID(i.trainID);
                 sjtu::vector<Train> trainV = trainBPT.findData(Train{_trainID});
                 for (int j = trainV[0].stationNum - 1; j >= 0; j--) {
-                    if (strcmp(trainV[0].stations[j], i.station) == 0) {break;}
-                    std::string _station(i.station);
+                    if (strcmp(trainV[0].stations[j], tokens._s.c_str()) == 0) {break;}
+                    std::string _station(trainV[0].stations[j]);
                     if (!transferS.count(_station)) {transferS[_station] = 1;}
                 }
             }
@@ -269,43 +270,45 @@ int main() {
                 std::string _trainID(i.trainID);
                 sjtu::vector<Train> trainV = trainBPT.findData(Train{_trainID});
                 for (int j = 0; j < trainV[0].stationNum - 1; j++) {
-                    if (strcmp(trainV[0].stations[j], i.station) == 0) {break;}
-                    std::string _station(i.station);
+                    if (strcmp(trainV[0].stations[j], tokens._t.c_str()) == 0) {break;}
+                    std::string _station(trainV[0].stations[j]);
                     if (transferS.count(_station)) {transferStation.push_back(_station);}
                 }
             }
             TransferTicket bestTicket{};
-            for (std::size_t i = 0; i < transferStation.size(); i++) {
-                sjtu::vector<Ticket> ticketSet1 = queryTicket(tokens._s, transferStation[i], tokens._d);
-                for (std::size_t j = 0; j < ticketSet1.size(); j++) {
-                    sjtu::vector<Ticket> ticketSet2 = queryNextTicket(transferStation[i], tokens._t, tokens._d, ticketSet1[j]);
-                    TransferTicket curTicket{ticketSet1[i], ticketSet2[j]};
-                    if (tokens._p == "time") {
-                        if (curTicket.during < bestTicket.during) {
-                            bestTicket = curTicket;
+            for (const auto & i : transferStation) {
+                sjtu::vector<Ticket> ticketSet1 = queryTicket(tokens._s, i, tokens._d);
+                for (const auto & j : ticketSet1) {
+                    sjtu::vector<Ticket> ticketSet2 = queryNextTicket(i, tokens._t, tokens._d, j);
+                    for (const auto & k : ticketSet2){
+                        TransferTicket curTicket{j, k};
+                        if (tokens._p == "time") {
+                            if (curTicket.during < bestTicket.during) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.during == bestTicket.during && curTicket.price < bestTicket.price) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.price == bestTicket.price && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
+                                bestTicket = curTicket;
+                            }
                         }
-                        else if (curTicket.during == bestTicket.during && curTicket.price < bestTicket.price) {
-                            bestTicket = curTicket;
-                        }
-                        else if (curTicket.price == bestTicket.price && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
-                            bestTicket = curTicket;
-                        }
-                        else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
-                            bestTicket = curTicket;
-                        }
-                    }
-                    if (tokens._p == "cost") {
-                        if (curTicket.price < bestTicket.price) {
-                            bestTicket = curTicket;
-                        }
-                        else if (curTicket.price == bestTicket.price && curTicket.during < bestTicket.during) {
-                            bestTicket = curTicket;
-                        }
-                        else if (curTicket.during == bestTicket.during && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
-                            bestTicket = curTicket;
-                        }
-                        else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
-                            bestTicket = curTicket;
+                        if (tokens._p == "cost") {
+                            if (curTicket.price < bestTicket.price) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.price == bestTicket.price && curTicket.during < bestTicket.during) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.during == bestTicket.during && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
+                                bestTicket = curTicket;
+                            }
+                            else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
+                                bestTicket = curTicket;
+                            }
                         }
                     }
                 }
@@ -314,7 +317,7 @@ int main() {
                 std::cout << 0 << '\n';
             }
             else {
-                std::cout << bestTicket.ticket1 << ' ' << bestTicket.ticket2 << '\n';
+                std::cout << bestTicket.ticket1 << '\n' << bestTicket.ticket2 << '\n';
             }
         }
         if (tokens.op_name == "buy_ticket") {
@@ -356,7 +359,7 @@ int main() {
                         orderBPT.addData(newOrder);
                         std::cout << newOrder.price * newOrder.seats << '\n';
                     }
-                    else if (tokens._p != "false") {
+                    else if (tokens._q == "true") {
                         newOrder.orderStatus = OrderStatus::pending;
                         PendingOrder newPendingOrder{tokens._u, tokens._i, tokens._f, tokens._t, md};
                         newPendingOrder.seats = newOrder.seats;
@@ -419,6 +422,7 @@ int main() {
                                 if (strcmp(vec1[0].stations[j], pOrder.setOffStation) == 0) {startIndex = j;}
                                 if (strcmp(vec1[0].stations[i], pOrder.arriveStation) == 0) {endIndex = j;}
                             }
+                            if (pOrder.setOffDate - vec1[0].setOffTime[startIndex].dd != curOrder.setOffDate - curOrder.setOffTime.dd) {continue;}
                             int _maxSeat = -1;
                             for (int j = startIndex; j < endIndex; j++) {_maxSeat = std::max(_maxSeat, ticketI[j]);}
                             if (pOrder.seats <= vec1[0].seatNum - _maxSeat) {
@@ -502,7 +506,7 @@ sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, c
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
                         for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}
-                        Ticket _ticket{tmp[0].trainID, _s, _t, md,vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
+                        Ticket _ticket{tmp[0].trainID, _s, _t, md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
                         vec.push_back(_ticket);
                     }
                 }
@@ -548,8 +552,8 @@ sjtu::vector<Ticket> queryNextTicket(const std::string& _s, const std::string& _
                             if (stationName == _t) {endIndex = i;}
                         }
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
-                        int _maxSeat = 1e5 + 1;
-                        for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::min(_maxSeat, ticketI[i]);}
+                        int _maxSeat = -1;
+                        for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}
                         Ticket _ticket{tmp[0].trainID, _s, _t, _md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
                         vec.push_back(_ticket);
                     }

@@ -36,8 +36,8 @@ struct Ticket {
 struct TransferTicket {
     Ticket ticket1{};
     Ticket ticket2{};
-    int during = 1e6;
-    int price = 1e6;
+    int during = 1e9;
+    int price = 1e9;
 
     TransferTicket() = default;
 

@@ -45,7 +45,7 @@ inline void mergeSortByTime(int l, int r) {
     int p = l, q = mid + 1, cursor = l;
     while (cursor <= r) {
         if (p <= mid && q <= r) {
-            if (tmp[p].during < tmp[q].during) {
+            if (tmp[p].during < tmp[q].during || tmp[p].during == tmp[q].during && tmp[p].trainID < tmp[q].trainID) {
                 a[cursor++] = tmp[p++];
             }
             else {
@@ -66,15 +66,15 @@ inline void mergeSortByCost(int l, int r) {
         return;
     }
     int mid = (l + r) / 2;
-    mergeSortByTime(l, mid);
-    mergeSortByTime(mid + 1, r);
+    mergeSortByCost(l, mid);
+    mergeSortByCost(mid + 1, r);
     for (int i = l; i <= r; i++) {
         tmp[i] = a[i];
     }
     int p = l, q = mid + 1, cursor = l;
     while (cursor <= r) {
         if (p <= mid && q <= r) {
-            if (tmp[p].price < tmp[q].price) {
+            if (tmp[p].price < tmp[q].price || tmp[p].price == tmp[q].price && tmp[p].trainID < tmp[q].trainID) {
                 a[cursor++] = tmp[p++];
             }
             else {

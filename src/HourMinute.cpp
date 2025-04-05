@@ -43,7 +43,7 @@ bool HourMinute::operator> (const HourMinute &other) const {
 }
 
 bool HourMinute::operator== (const HourMinute &other) const {
-    return hh == other.hh && mm == other.mm;
+    return dd == other.dd && hh == other.hh && mm == other.mm;
 }
 
 bool HourMinute::operator!= (const HourMinute &other) const {

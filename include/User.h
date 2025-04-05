@@ -7,7 +7,7 @@
 struct User {
     char username[21]{};
     char password[31]{};
-    char name[13]{};
+    char name[17]{};
     char mailAddr[31]{};
     int privilege{};
     bool login = false; // 存储用户的登录状态

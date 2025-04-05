@@ -280,14 +280,12 @@ int main() {
             for (auto & i : vec2) {
                 std::string _trainID(i.trainID);
                 sjtu::vector<Train> trainV = trainBPT.findData(Train{_trainID});
-                if (md - i.setOffTime.dd >= trainV[0].saleDate[0] && md - i.setOffTime.dd <= trainV[0].saleDate[1]) {
-                    for (int j = 0; j < trainV[0].stationNum - 1; j++) {
-                        if (strcmp(trainV[0].stations[j], tokens._t.c_str()) == 0) {break;}
-                        std::string _station(trainV[0].stations[j]);
-                        if (transferS.count(_station) && transferS[_station] != 0) {
-                            transferStation.push_back(_station);
-                            transferS[_station] = 0;
-                        }
+                for (int j = 0; j < trainV[0].stationNum - 1; j++) {
+                    if (strcmp(trainV[0].stations[j], tokens._t.c_str()) == 0) {break;}
+                    std::string _station(trainV[0].stations[j]);
+                    if (transferS.count(_station) && transferS[_station] != 0) {
+                        transferStation.push_back(_station);
+                        transferS[_station] = 0;
                     }
                 }
             }
@@ -299,6 +297,7 @@ int main() {
                     if (tokens._p == "time") {
                         Ticket k = queryNextTicketByTime(i, tokens._t, tokens._d, j);
                         TransferTicket curTicket{j, k};
+
                         if (k.price == -1) {continue;}
                         if (curTicket.during < bestTicket.during) {
                             bestTicket = curTicket;

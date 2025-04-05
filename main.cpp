@@ -278,6 +278,7 @@ int main() {
                     if (transferS.count(_station)) {transferStation.push_back(_station);}
                 }
             }
+
             TransferTicket bestTicket{};
             for (const auto & i : transferStation) {
                 sjtu::vector<Ticket> ticketSet1 = queryTicket(tokens._s, i, tokens._d);
@@ -330,7 +331,7 @@ int main() {
                 if (!vec1.empty() && vec1[0].release) {
                     sjtu::vector<std::string> mm_dd = split(tokens._d, '-');
                     MonthDate md{stringToInt(mm_dd[0]), stringToInt(mm_dd[1])};
-                    int startIndex = 0, endIndex = 0;
+                    int startIndex = -1, endIndex = -1;
                     HourMinute _setOffTime{}, _arriveTime{};
                     for (int i = 0; i < vec1[0].stationNum; i++) {
                         std::string stationN(vec1[0].stations[i]);
@@ -343,7 +344,7 @@ int main() {
                             _arriveTime = vec1[0].arriveTime[i];
                         }
                     }
-                    if (startIndex >= endIndex) {
+                    if (startIndex >= endIndex || startIndex == -1 || endIndex == -1) {
                         std::cout << -1 << '\n';
                         continue;
                     }
@@ -481,8 +482,8 @@ int main() {
             std::cout << 0 << '\n';
         }
     }
-
     flush();
+
     /*userBPT.clear();
     trainBPT.clear();
     stationBPT.clear();
@@ -566,6 +567,7 @@ sjtu::vector<Ticket> queryNextTicket(const std::string& _s, const std::string& _
                             if (stationName == _s) {startIndex = i;}
                             if (stationName == _t) {endIndex = i;}
                         }
+                        if (startIndex >= endIndex) {goto End;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
                         for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}

@@ -46,6 +46,7 @@ struct PendingOrder {
     char setOffStation[31]{};
     char arriveStation[31]{};
     MonthDate setOffDate{};
+    MonthDate startDate{};
     int seats = -1;
     int orderIndex = -1;
 

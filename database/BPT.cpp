@@ -592,10 +592,10 @@ sjtu::vector<PendingOrder> BPT<PendingOrder>::findData(const PendingOrder& obj) 
 
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (strcmp(obj.trainID, cur.storage[i].trainID) == 0) {
+            if (strcmp(obj.trainID, cur.storage[i].trainID) == 0 && obj.startDate == cur.storage[i].startDate) {
                 ret.push_back(cur.storage[i]);
             }
-            else if (strcmp(obj.trainID, cur.storage[i].trainID) < 0) {
+            else if (strcmp(obj.trainID, cur.storage[i].trainID) < 0 || obj.startDate < cur.storage[i].startDate) {
                 return ret;
             }
         }

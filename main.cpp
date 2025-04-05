@@ -275,7 +275,10 @@ int main() {
                 for (int j = 0; j < trainV[0].stationNum - 1; j++) {
                     if (strcmp(trainV[0].stations[j], tokens._t.c_str()) == 0) {break;}
                     std::string _station(trainV[0].stations[j]);
-                    if (transferS.count(_station)) {transferStation.push_back(_station);}
+                    if (transferS.count(_station) && transferS[_station] != 0) {
+                        transferStation.push_back(_station);
+                        transferS[_station] = 0;
+                    }
                 }
             }
 
@@ -293,10 +296,10 @@ int main() {
                             else if (curTicket.during == bestTicket.during && curTicket.price < bestTicket.price) {
                                 bestTicket = curTicket;
                             }
-                            else if (curTicket.price == bestTicket.price && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
+                            else if (curTicket.during == bestTicket.during && curTicket.price == bestTicket.price && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
                                 bestTicket = curTicket;
                             }
-                            else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
+                            else if (curTicket.during == bestTicket.during && curTicket.price == bestTicket.price && curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
                                 bestTicket = curTicket;
                             }
                         }
@@ -307,10 +310,10 @@ int main() {
                             else if (curTicket.price == bestTicket.price && curTicket.during < bestTicket.during) {
                                 bestTicket = curTicket;
                             }
-                            else if (curTicket.during == bestTicket.during && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
+                            else if (curTicket.price == bestTicket.price && curTicket.during == bestTicket.during && curTicket.ticket1.trainID < bestTicket.ticket1.trainID) {
                                 bestTicket = curTicket;
                             }
-                            else if (curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
+                            else if (curTicket.price == bestTicket.price && curTicket.during == bestTicket.during && curTicket.ticket1.trainID == bestTicket.ticket1.trainID && curTicket.ticket2.trainID < bestTicket.ticket2.trainID) {
                                 bestTicket = curTicket;
                             }
                         }

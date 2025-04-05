@@ -12,6 +12,7 @@
 #include "./include/Order.h"
 #include "./STLite/vector/vector.hpp"
 #include "./STLite/map/map.hpp"
+#include "./STLite/priority_queue/priority_queue.hpp"
 
 BPT<User> userBPT("user");
 BPT<Train> trainBPT("train");
@@ -50,6 +51,9 @@ sjtu::vector<Ticket> queryTicket(const std::string&, const std::string&, const s
 sjtu::vector<Ticket> queryNextTicket(const std::string&, const std::string&, const std::string&, const Ticket&);
 
 int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
     //freopen("output.txt", "w", stdout);
     initialise();
     std::string command;

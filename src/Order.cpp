@@ -100,3 +100,9 @@ bool PendingOrder::operator<= (const PendingOrder& other) const {
 bool PendingOrder::operator>= (const PendingOrder& other) const {
     return *this == other || *this > other;
 }
+
+std::ostream& operator<< (std::ostream& os, const PendingOrder& obj) {
+    os << obj.trainID << ' ' << obj.setOffStation << ' ' << obj.setOffDate
+       << ' ' << obj.arriveStation << ' ' <<  obj.seats;
+    return os;
+}

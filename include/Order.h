@@ -43,8 +43,8 @@ struct Order {
 struct PendingOrder {
     char username[21]{};
     char trainID[21]{};
-    char setOffStation[21]{};
-    char arriveStation[21]{};
+    char setOffStation[31]{};
+    char arriveStation[31]{};
     MonthDate setOffDate{};
     int seats = -1;
     int orderIndex = -1;
@@ -67,5 +67,7 @@ struct PendingOrder {
     bool operator<= (const PendingOrder& other) const;
 
     bool operator>= (const PendingOrder& other) const;
+
+    friend std::ostream& operator<< (std::ostream& os, const PendingOrder& obj);
 };
 #endif //ORDER_H

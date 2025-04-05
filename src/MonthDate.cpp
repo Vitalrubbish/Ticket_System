@@ -60,15 +60,10 @@ MonthDate MonthDate::operator+ (int d) const {
 
 int MonthDate::operator- (const MonthDate& other) const {
     int ret = 0;
-    if (mm == other.mm) {
-        ret = dd - other.dd;
-    }
-    else {
-        ret += days[other.mm] - other.dd + dd;
-        for (int i = other.mm + 1; i <= mm - 1; i++) {
-            ret += days[i];
-        }
-    }
+    for (int i = 1; i <= mm - 1; i++) {ret += days[i];}
+    ret += dd - 1;
+    for (int i = 1; i <= other.mm - 1; i++) {ret -= days[i];}
+    ret -= other.dd - 1;
     return ret;
 }
 

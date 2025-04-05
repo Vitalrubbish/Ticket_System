@@ -132,7 +132,7 @@ int main() {
             sjtu::vector<User> vec1 = userBPT.findData(User{tokens._c});
             sjtu::vector<User> vec2 = userBPT.findData(User{tokens._u});
             if (!vec1.empty() && !vec2.empty() && vec1[0].login) {
-                if (vec1[0].privilege > vec2[0].privilege || vec1[0] == vec2[0]) {
+                if ((tokens._g.empty() || stringToInt(tokens._g) < vec1[0].privilege) && (vec1[0].privilege > vec2[0].privilege || vec1[0] == vec2[0])) {
                     if (!tokens._p.empty()) {std::strcpy(vec2[0].password, tokens._p.c_str());}
                     if (!tokens._n.empty()) {std::strcpy(vec2[0].name, tokens._n.c_str());}
                     if (!tokens._m.empty()) {std::strcpy(vec2[0].mailAddr, tokens._m.c_str());}
@@ -425,8 +425,7 @@ int main() {
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(vec1[0].ticketInfoIndex + (curOrder.setOffDate - curOrder.setOffTime.dd - vec1[0].saleDate[0]) * vec1[0].stationNum, vec1[0].stationNum);
                         for (int i = startIndex; i < endIndex; i++) {ticketI[i] -= curOrder.seats;}
                         sjtu::vector<PendingOrder> pOrders = pendingOrderBPT.findData(PendingOrder{curOrder.trainID});
-                        for (std::size_t i = 0; i < pOrders.size(); i++) {
-                            PendingOrder pOrder = pOrders[i];
+                        for (auto pOrder : pOrders) {
                             for (int j = 0; j < vec1[0].stationNum; j++) {
                                 if (strcmp(vec1[0].stations[j], pOrder.setOffStation) == 0) {startIndex = j;}
                                 if (strcmp(vec1[0].stations[j], pOrder.arriveStation) == 0) {endIndex = j;}
@@ -482,6 +481,7 @@ int main() {
             std::cout << 0 << '\n';
         }
     }
+
     flush();
     /*userBPT.clear();
     trainBPT.clear();

@@ -33,7 +33,4 @@ add_executable(code
         STLite/map/exceptions.hpp
         STLite/map/utility.hpp
         STLite/map/map.hpp
-        STLite/priority_queue/exceptions.hpp
-        STLite/priority_queue/utility.hpp
-        STLite/priority_queue/priority_queue.hpp
 )

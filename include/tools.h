@@ -107,4 +107,24 @@ inline sjtu::vector<Ticket> sortByCost(const sjtu::vector<Ticket>& vec) {
     for (int i = 0; i < len; i++) {ret.push_back(a[i]);}
     return ret;
 }
+
+struct TimeCmp {
+    bool operator() (const Ticket& x, const Ticket& y) const {
+        if (x.setOffDate - x.setOffTime.dd + x.arriveTime.dd != y.setOffDate - y.setOffTime.dd + y.arriveTime.dd) {
+            return x.setOffDate - x.setOffTime.dd + x.arriveTime.dd < y.setOffDate - y.setOffTime.dd + y.arriveTime.dd;
+        }
+        if (x.arriveTime.hh != y.arriveTime.hh) {return x.arriveTime.hh < y.arriveTime.hh;}
+        if (x.arriveTime.mm != y.arriveTime.mm) {return x.arriveTime.mm < y.arriveTime.mm;}
+        return x.trainID < y.trainID;
+    }
+};
+
+struct CostCmp {
+    bool operator() (const Ticket& x, const Ticket& y) const {
+        if (x.price != y.price) {
+            return x.price < y.price;
+        }
+        return x.trainID < y.trainID;
+    }
+};
 #endif //TOOLS_H

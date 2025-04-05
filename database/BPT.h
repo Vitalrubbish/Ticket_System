@@ -9,7 +9,7 @@
 #include "../include/Order.h"
 #include "../STLite/vector/vector.hpp"
 
-constexpr int node_size = 30;
+constexpr int node_size = 28;
 
 template <typename T>
 class BPT {

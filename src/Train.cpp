@@ -2,7 +2,7 @@
 #include "../include/tools.h"
 
 Train::Train(const std::string& _i) {
-    std::strcpy(trainID, _i.c_str());
+    hashCode = HashByByte(_i);
 }
 
 Train::Train(const std::string& _i, const std::string& _n, const std::string& _m,
@@ -10,6 +10,7 @@ Train::Train(const std::string& _i, const std::string& _n, const std::string& _m
     const std::string& _t, const std::string& _o, const std::string& _d,
     const std::string& _y) {
     std::strcpy(trainID, _i.c_str());
+    hashCode = HashByByte(_i);
     stationNum = stringToInt(_n);
     seatNum = stringToInt(_m);
     sjtu::vector<std::string> stationName = split(_s, '|');
@@ -39,38 +40,26 @@ Train::Train(const std::string& _i, const std::string& _n, const std::string& _m
     type = _y[0];
 }
 
-bool Train ::operator< (const Train& other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 < str2;
+bool Train::operator< (const Train& other) const {
+    return hashCode < other.hashCode;
 }
 
 bool Train::operator> (const Train & other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 > str2;
+    return hashCode > other.hashCode;
 }
 
 bool Train ::operator<= (const Train & other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 <= str2;
+    return hashCode <= other.hashCode;
 }
 
 bool Train ::operator>= (const Train & other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 >= str2;
+    return hashCode >= other.hashCode;
 }
 
 bool Train ::operator== (const Train & other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 == str2;
+    return hashCode == other.hashCode;
 }
 
 bool Train ::operator!= (const Train & other) const {
-    std::string str1(trainID, strlen(trainID));
-    std::string str2(other.trainID, strlen(other.trainID));
-    return str1 != str2;
+    return hashCode != other.hashCode;
 }

@@ -15,6 +15,7 @@ struct Train {
     char type{};
     bool release = false; // 该列车是否被发布
 
+    int hashCode = -1;
     int ticketInfoIndex = -1; // 第一天发出的列车的余票信息在余票信息数据库中的位置
 
     Train() = default;

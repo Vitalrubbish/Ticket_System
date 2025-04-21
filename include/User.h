@@ -10,6 +10,7 @@ struct User {
     char name[17]{};
     char mailAddr[31]{};
     int privilege{};
+    int hashCode{};
     bool login = false; // 存储用户的登录状态
 
     User() = default;

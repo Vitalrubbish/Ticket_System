@@ -4,6 +4,16 @@
 #include "../STLite/vector/vector.hpp"
 #include "Tickets.h"
 
+inline int HashByByte(const std::string& str) {
+    long long ans = 0;
+    const long long pr = 31, mod = 1e9 + 7;
+    for (auto& i: str) {
+        ans = ans * pr + i;
+        ans %= mod;
+    }
+    return ans;
+}
+
 inline int stringToInt(const std::string& str) {
     int ans = 0, sign = 1;
     std::size_t pos = 0;

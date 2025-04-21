@@ -658,7 +658,7 @@ void BPT<User, 32>::logout() {
 }
 
 template class BPT<User, 32>;
-template class BPT<Train, 4>;
+template class BPT<Train, 6>;
 template class BPT<StationInfo, 48>;
 template class BPT<Order, 24>;
 template class BPT<PendingOrder, 24>;

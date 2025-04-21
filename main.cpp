@@ -500,8 +500,8 @@ int main() {
 sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, const std::string& _d) {
     sjtu::vector<std::string> mm_dd = split(_d, '-');
     MonthDate md{stringToInt(mm_dd[0]), stringToInt(mm_dd[1])};
-    sjtu::vector<StationInfo> vec1 = stationBPT.findData(StationInfo{_s});
-    sjtu::vector<StationInfo> vec2 = stationBPT.findData(StationInfo{_t});
+    const sjtu::vector<StationInfo>& vec1 = stationBPT.findData(StationInfo{_s});
+    const sjtu::vector<StationInfo>& vec2 = stationBPT.findData(StationInfo{_t});
     sjtu::vector<Ticket> vec;
     std::size_t pos1 = 0, pos2 = 0;
     while (pos1 < vec1.size() && pos2 < vec2.size()) {
@@ -539,8 +539,8 @@ Ticket queryNextTicketByTime(const std::string& _s, const std::string& _t, const
     sjtu::vector<std::string> mm_dd = split(_d, '-');
     MonthDate md{stringToInt(mm_dd[0]), stringToInt(mm_dd[1])};
     md = md - ticket1.setOffTime.dd + ticket1.arriveTime.dd;
-    sjtu::vector<StationInfo> vec1 = stationBPT.findData(StationInfo{_s});
-    sjtu::vector<StationInfo> vec2 = stationBPT.findData(StationInfo{_t});
+    const sjtu::vector<StationInfo>& vec1 = stationBPT.findData(StationInfo{_s});
+    const sjtu::vector<StationInfo>& vec2 = stationBPT.findData(StationInfo{_t});
     sjtu::vector<Ticket> vec;
     std::size_t pos1 = 0, pos2 = 0;
     while (pos1 < vec1.size() && pos2 < vec2.size()) {
@@ -550,7 +550,7 @@ Ticket queryNextTicketByTime(const std::string& _s, const std::string& _t, const
             if (_trainI == ticket1.trainID) {goto End;}
             if (vec1[pos1].setOffTime < vec2[pos2].arriveTime) {
                 std::string trainI{vec1[pos1].trainID, strlen(vec1[pos1].trainID)};
-                sjtu::vector<Train> tmp = trainBPT.findData(Train{trainI});
+                const sjtu::vector<Train>& tmp = trainBPT.findData(Train{trainI});
                 if (!tmp.empty()) {
                     if (tmp[0].saleDate[1] >= md - vec1[pos1].setOffTime.dd) {
                         MonthDate _md = md;
@@ -567,11 +567,9 @@ Ticket queryNextTicketByTime(const std::string& _s, const std::string& _t, const
                         if (startIndex >= endIndex) {goto End;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
-                        Ticket _ticket{tmp[0].trainID, _s, _t, _md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
-                        if (!(cmp(_ticket, bestT) || bestT.during == 1e9)) {continue;}
                         for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}
-                        _ticket.maxSeat = tmp[0].seatNum - _maxSeat;
-                        bestT = _ticket;
+                        Ticket _ticket{tmp[0].trainID, _s, _t, _md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
+                        if (cmp(_ticket, bestT) || bestT.during == 1e9) {bestT = _ticket;}
                     }
                 }
             }
@@ -592,8 +590,8 @@ Ticket queryNextTicketByCost(const std::string& _s, const std::string& _t, const
     sjtu::vector<std::string> mm_dd = split(_d, '-');
     MonthDate md{stringToInt(mm_dd[0]), stringToInt(mm_dd[1])};
     md = md - ticket1.setOffTime.dd + ticket1.arriveTime.dd;
-    sjtu::vector<StationInfo> vec1 = stationBPT.findData(StationInfo{_s});
-    sjtu::vector<StationInfo> vec2 = stationBPT.findData(StationInfo{_t});
+    const sjtu::vector<StationInfo>& vec1 = stationBPT.findData(StationInfo{_s});
+    const sjtu::vector<StationInfo>& vec2 = stationBPT.findData(StationInfo{_t});
     sjtu::vector<Ticket> vec;
     std::size_t pos1 = 0, pos2 = 0;
     while (pos1 < vec1.size() && pos2 < vec2.size()) {
@@ -603,7 +601,7 @@ Ticket queryNextTicketByCost(const std::string& _s, const std::string& _t, const
             if (_trainI == ticket1.trainID) {goto End;}
             if (vec1[pos1].setOffTime < vec2[pos2].arriveTime) {
                 std::string trainI{vec1[pos1].trainID, strlen(vec1[pos1].trainID)};
-                sjtu::vector<Train> tmp = trainBPT.findData(Train{trainI});
+                const sjtu::vector<Train>& tmp = trainBPT.findData(Train{trainI});
                 if (!tmp.empty()) {
                     if (tmp[0].saleDate[1] >= md - vec1[pos1].setOffTime.dd) {
                         MonthDate _md = md;
@@ -620,11 +618,9 @@ Ticket queryNextTicketByCost(const std::string& _s, const std::string& _t, const
                         if (startIndex >= endIndex) {goto End;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
-                        Ticket _ticket{tmp[0].trainID, _s, _t, _md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
-                        if (!cmp(_ticket, bestT)) {continue;}
                         for (int i = startIndex; i < endIndex; i++) {_maxSeat = std::max(_maxSeat, ticketI[i]);}
-                        _ticket.maxSeat = tmp[0].seatNum - _maxSeat;
-                        bestT = _ticket;
+                        Ticket _ticket{tmp[0].trainID, _s, _t, _md, vec1[pos1].setOffTime, vec2[pos2].arriveTime, tmp[0].prices[endIndex] - tmp[0].prices[startIndex], tmp[0].seatNum - _maxSeat};
+                        if (cmp(_ticket, bestT)) {bestT = _ticket;}
                     }
                 }
             }

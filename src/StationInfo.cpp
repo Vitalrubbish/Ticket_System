@@ -12,12 +12,10 @@ StationInfo::StationInfo(const std::string& _station, const std::string& _trainI
 }
 
 bool StationInfo::operator< (const StationInfo& other) const {
-    std::string str1(station, strlen(station));
-    std::string str2(other.station, strlen(other.station));
-    if (str1 != str2) {return str1 < str2;}
-    std::string str3(trainID, strlen(trainID));
-    std::string str4(other.trainID, strlen(other.trainID));
-    return str3 < str4;
+    int val = strcmp(station, other.station);
+    if (val != 0) {return val < 0;}
+    val = strcmp(trainID, other.trainID);
+    return val < 0;
 }
 
 bool StationInfo::operator> (const StationInfo& other) const {
@@ -25,11 +23,7 @@ bool StationInfo::operator> (const StationInfo& other) const {
 }
 
 bool StationInfo::operator== (const StationInfo& other) const {
-    std::string str1(station, strlen(station));
-    std::string str2(other.station, strlen(other.station));
-    std::string str3(trainID, strlen(trainID));
-    std::string str4(other.trainID, strlen(other.trainID));
-    return str1 == str2 && str3 == str4;
+    return strcmp(station, other.station) == 0 && strcmp(trainID, other.trainID) == 0;
 }
 
 bool StationInfo::operator!= (const StationInfo& other) const {

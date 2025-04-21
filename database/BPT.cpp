@@ -540,7 +540,7 @@ sjtu::vector<Order> BPT<Order, 24>::findData(const Order& obj) {
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            if (strcmp(obj.username, cur.storage[mid].username) <= 0) {
+            if (obj.hashCode <= cur.storage[mid].hashCode) {
                 r = mid - 1;
             }
             else {
@@ -552,10 +552,10 @@ sjtu::vector<Order> BPT<Order, 24>::findData(const Order& obj) {
 
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (strcmp(obj.username, cur.storage[i].username) == 0) {
+            if (obj.hashCode == cur.storage[i].hashCode) {
                 ret.push_back(cur.storage[i]);
             }
-            else if (strcmp(obj.username, cur.storage[i].username) < 0) {
+            else if (obj.hashCode < cur.storage[i].hashCode) {
                 return ret;
             }
         }
@@ -581,7 +581,7 @@ sjtu::vector<PendingOrder> BPT<PendingOrder, 24>::findData(const PendingOrder& o
         int l = 0, r = cur.size - 1;
         while (l <= r) {
             int mid = (l + r) / 2;
-            if (strcmp(obj.trainID, cur.storage[mid].trainID) <= 0) {
+            if (obj.hashCode <= cur.storage[mid].hashCode) {
                 r = mid - 1;
             }
             else {
@@ -593,10 +593,10 @@ sjtu::vector<PendingOrder> BPT<PendingOrder, 24>::findData(const PendingOrder& o
 
     while (true) {
         for (int i = 0; i < cur.size; i++) {
-            if (strcmp(obj.trainID, cur.storage[i].trainID) == 0 && obj.startDate == cur.storage[i].startDate) {
+            if (obj.hashCode == cur.storage[i].hashCode && obj.startDate == cur.storage[i].startDate) {
                 ret.push_back(cur.storage[i]);
             }
-            else if (strcmp(obj.trainID, cur.storage[i].trainID) < 0 || obj.startDate < cur.storage[i].startDate) {
+            else if (obj.hashCode < cur.storage[i].hashCode || obj.startDate < cur.storage[i].startDate) {
                 return ret;
             }
         }

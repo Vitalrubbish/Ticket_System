@@ -23,7 +23,7 @@ class BPT {
         int next = -1;
     };
 
-   int root = -1;
+    int root = -1;
     int head = -1;
     int new_id = 0;
 

@@ -14,10 +14,10 @@
 #include "./STLite/map/map.hpp"
 
 BPT<User, 48> userBPT("user");
-BPT<Train, 8> trainBPT("train");
-BPT<StationInfo, 64> stationBPT("station");
-BPT<Order, 32> orderBPT("order");
-BPT<PendingOrder, 32> pendingOrderBPT("pendingOrder");
+BPT<Train, 4> trainBPT("train");
+BPT<StationInfo, 72> stationBPT("station");
+BPT<Order, 36> orderBPT("order");
+BPT<PendingOrder, 36> pendingOrderBPT("pendingOrder");
 TicketInfo ticketInfo{};
 
 std::fstream system_file;

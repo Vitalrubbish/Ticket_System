@@ -14,7 +14,7 @@
 #include "./STLite/map/map.hpp"
 
 BPT<User, 32> userBPT("user");
-BPT<Train, 6> trainBPT("train");
+BPT<Train, 4> trainBPT("train");
 BPT<StationInfo, 48> stationBPT("station");
 BPT<Order, 24> orderBPT("order");
 BPT<PendingOrder, 24> pendingOrderBPT("pendingOrder");

@@ -4,7 +4,6 @@
 #include <cstring>
 #include "HourMinute.h"
 #include "MonthDate.h"
-#include "tools.h"
 enum class OrderStatus {success, pending, refunded};
 struct Order {
     char username[21]{};
@@ -17,7 +16,6 @@ struct Order {
     int price = -1;
     int seats = -1;
     int orderIndex = -1;
-    int hashCode = -1;
     OrderStatus orderStatus{};
 
     Order() = default;
@@ -49,7 +47,6 @@ struct PendingOrder {
     char arriveStation[31]{};
     MonthDate setOffDate{};
     MonthDate startDate{};
-    int hashCode = -1;
     int seats = -1;
     int orderIndex = -1;
 

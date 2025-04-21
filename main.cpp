@@ -13,11 +13,11 @@
 #include "./STLite/vector/vector.hpp"
 #include "./STLite/map/map.hpp"
 
-BPT<User, 30> userBPT("user");
+BPT<User, 48> userBPT("user");
 BPT<Train, 8> trainBPT("train");
-BPT<StationInfo, 48> stationBPT("station");
-BPT<Order, 20> orderBPT("order");
-BPT<PendingOrder, 20> pendingOrderBPT("pendingOrder");
+BPT<StationInfo, 64> stationBPT("station");
+BPT<Order, 32> orderBPT("order");
+BPT<PendingOrder, 32> pendingOrderBPT("pendingOrder");
 TicketInfo ticketInfo{};
 
 std::fstream system_file;

@@ -487,7 +487,7 @@ sjtu::vector<T> BPT<T, node_size>::findData(const T& obj) {
 }
 
 template<>
-sjtu::vector<StationInfo> BPT<StationInfo, 48>::findData(const StationInfo& obj) {
+sjtu::vector<StationInfo> BPT<StationInfo, 64>::findData(const StationInfo& obj) {
     sjtu::vector<StationInfo> ret;
     int p = root;
     while (true) {
@@ -528,7 +528,7 @@ sjtu::vector<StationInfo> BPT<StationInfo, 48>::findData(const StationInfo& obj)
 }
 
 template<>
-sjtu::vector<Order> BPT<Order, 20>::findData(const Order& obj) {
+sjtu::vector<Order> BPT<Order, 32>::findData(const Order& obj) {
     sjtu::vector<Order> ret;
     int p = root;
     while (true) {
@@ -569,7 +569,7 @@ sjtu::vector<Order> BPT<Order, 20>::findData(const Order& obj) {
 }
 
 template<>
-sjtu::vector<PendingOrder> BPT<PendingOrder, 20>::findData(const PendingOrder& obj) {
+sjtu::vector<PendingOrder> BPT<PendingOrder, 32>::findData(const PendingOrder& obj) {
     sjtu::vector<PendingOrder> ret;
     int p = root;
     while (true) {
@@ -638,7 +638,7 @@ void BPT<T, node_size>::modifyData(const T& obj, const T& newObj) {
 }
 
 template <>
-void BPT<User, 30>::logout() {
+void BPT<User, 48>::logout() {
     if (head != -1) {
         readNode(head);
         while (true) {
@@ -656,8 +656,8 @@ void BPT<User, 30>::logout() {
     }
 }
 
-template class BPT<User, 30>;
+template class BPT<User, 48>;
 template class BPT<Train, 8>;
-template class BPT<StationInfo, 48>;
-template class BPT<Order, 20>;
-template class BPT<PendingOrder, 20>;
+template class BPT<StationInfo, 64>;
+template class BPT<Order, 32>;
+template class BPT<PendingOrder, 32>;

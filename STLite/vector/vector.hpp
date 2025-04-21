@@ -234,7 +234,7 @@ public:
 
 	vector() {
 		len = 0;
-		sze = 1;
+		sze = 8;
 		storage = static_cast<T*> (operator new (sze * sizeof(T)));
 	}
 
@@ -396,21 +396,10 @@ public:
 	 */
 
 	void doubleSize() {
-		sze *= 2;
+		sze *= 8;
 		T* tmp = static_cast<T*> (operator new (sze * sizeof(T)));
 		for (int i = 0; i < len; i++) {
 			new (&tmp[i]) T(storage[i]);
-			storage[i].~T();
-		}
-		operator delete (storage);
-		storage = tmp;
-	}
-
-	void halfSize() {
-		sze /= 2;
-		T** tmp = static_cast<T*> (operator new (sze * sizeof(T)));
-		for (int i = 0; i < len; i++) {
-			new(&tmp[i]) T(storage[i]);
 			storage[i].~T();
 		}
 		operator delete (storage);
@@ -464,9 +453,6 @@ public:
 		for (int i = pos.cur; i < len; i++) {
 			storage[i] = storage[i + 1];
 		}
-		/*if (len < sze / 2 && sze != 1) {
-			halfSize();
-		}*/
 		return pos;
 	}
 	/**
@@ -486,10 +472,6 @@ public:
 		for (size_t i = ind; i < len; i++) {
 			storage[i] = storage[i + 1];
 		}
-
-		/*if (len < sze / 2 && sze != 1) {
-			halfSize();
-		}*/
 		return ret;
 	}
 	/**

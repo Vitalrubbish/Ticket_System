@@ -1,19 +1,19 @@
 #include "BPT.h"
 
-template<typename T>
-void BPT<T>::readNode(const int &index_) {
+template <typename T, int node_size>
+void BPT<T, node_size>::readNode(const int& index_) {
     node_file.seekp(index_ * sizeof(Node));
     node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node));
 }
 
-template<typename T>
-void BPT<T>::writeNode(Node node, const int &index_) {
+template <typename T, int node_size>
+void BPT<T, node_size>::writeNode(Node node, const int &index_) {
     node_file.seekp(index_ * sizeof(Node));
     node_file.write(reinterpret_cast<char*>(&node), sizeof(Node));
 }
 
-template<typename T>
-void BPT<T>::splitNode() {
+template <typename T, int node_size>
+void BPT<T, node_size>::splitNode() {
     int mid = node_size / 2;
 
     Node new_node{};
@@ -74,8 +74,8 @@ void BPT<T>::splitNode() {
     writeNode(cur, cur.index);
 }
 
-template<typename T>
-void BPT<T>::insert(const T &data, const int &son_index) {
+template <typename T, int node_size>
+void BPT<T, node_size>::insert(const T &data, const int &son_index) {
     int l = 0, r = cur.size - 1;
     while (l <= r) {
         int mid = (l + r) / 2;
@@ -98,8 +98,8 @@ void BPT<T>::insert(const T &data, const int &son_index) {
     ++cur.size;
 }
 
-template<typename T>
-void BPT<T>::remove(const T &data) {
+template <typename T, int node_size>
+void BPT<T, node_size>::remove(const T &data) {
     int pos = -1, l = 0, r = cur.size - 1;
     while (l <= r) {
         int mid = (l + r) / 2;
@@ -124,8 +124,8 @@ void BPT<T>::remove(const T &data) {
     --cur.size;
 }
 
-template<typename T>
-void BPT<T>::flush(int st) {
+template <typename T, int node_size>
+void BPT<T, node_size>::flush(int st) {
     bool flag = false;
     if (st == root) {
         return;
@@ -155,8 +155,8 @@ void BPT<T>::flush(int st) {
     cur = st_node;
 }
 
-template<typename T>
-bool BPT<T>::borrowFromRight() {
+template <typename T, int node_size>
+bool BPT<T, node_size>::borrowFromRight() {
     bool flag = false;
     int depth_count = 0;
     Node cur_node = cur;
@@ -217,8 +217,8 @@ bool BPT<T>::borrowFromRight() {
     return false;
 }
 
-template<typename T>
-bool BPT<T>::borrowFromLeft() {
+template <typename T, int node_size>
+bool BPT<T, node_size>::borrowFromLeft() {
     bool flag = false;
     int depth_count = 0;
     Node cur_node = cur;
@@ -279,8 +279,8 @@ bool BPT<T>::borrowFromLeft() {
 }
 
 
-template<typename T>
-void BPT<T>::combine() {
+template <typename T, int node_size>
+void BPT<T, node_size>::combine() {
     Node cur_node = cur;
 
     readNode(cur.father);
@@ -340,8 +340,8 @@ void BPT<T>::combine() {
     }
 }
 
-template<typename T>
-int BPT<T>::addData(const T &data) {
+template <typename T, int node_size>
+int BPT<T, node_size>::addData(const T &data) {
     int p = root, q = -1;
     while (true) {
         readNode(p);
@@ -385,8 +385,8 @@ int BPT<T>::addData(const T &data) {
     return -1;
 }
 
-template <typename T>
-void BPT<T>::removeData(const T &data) {
+template <typename T, int node_size>
+void BPT<T, node_size>::removeData(const T &data) {
     int p = root, q = -1;
     while (true) {
         readNode(p);
@@ -445,8 +445,8 @@ void BPT<T>::removeData(const T &data) {
     }
 }
 
-template <typename T>
-sjtu::vector<T> BPT<T>::findData(const T& obj) {
+template <typename T, int node_size>
+sjtu::vector<T> BPT<T, node_size>::findData(const T& obj) {
     sjtu::vector<T> ret;
     int p = root;
     while (true) {
@@ -487,7 +487,7 @@ sjtu::vector<T> BPT<T>::findData(const T& obj) {
 }
 
 template<>
-sjtu::vector<StationInfo> BPT<StationInfo>::findData(const StationInfo& obj) {
+sjtu::vector<StationInfo> BPT<StationInfo, 48>::findData(const StationInfo& obj) {
     sjtu::vector<StationInfo> ret;
     int p = root;
     while (true) {
@@ -528,7 +528,7 @@ sjtu::vector<StationInfo> BPT<StationInfo>::findData(const StationInfo& obj) {
 }
 
 template<>
-sjtu::vector<Order> BPT<Order>::findData(const Order& obj) {
+sjtu::vector<Order> BPT<Order, 20>::findData(const Order& obj) {
     sjtu::vector<Order> ret;
     int p = root;
     while (true) {
@@ -569,7 +569,7 @@ sjtu::vector<Order> BPT<Order>::findData(const Order& obj) {
 }
 
 template<>
-sjtu::vector<PendingOrder> BPT<PendingOrder>::findData(const PendingOrder& obj) {
+sjtu::vector<PendingOrder> BPT<PendingOrder, 20>::findData(const PendingOrder& obj) {
     sjtu::vector<PendingOrder> ret;
     int p = root;
     while (true) {
@@ -609,8 +609,8 @@ sjtu::vector<PendingOrder> BPT<PendingOrder>::findData(const PendingOrder& obj) 
     return ret;
 }
 
-template <typename T>
-void BPT<T>::modifyData(const T& obj, const T& newObj) {
+template <typename T, int node_size>
+void BPT<T, node_size>::modifyData(const T& obj, const T& newObj) {
     int p = root;
     while (true) {
         readNode(p);
@@ -638,7 +638,7 @@ void BPT<T>::modifyData(const T& obj, const T& newObj) {
 }
 
 template <>
-void BPT<User>::logout() {
+void BPT<User, 30>::logout() {
     if (head != -1) {
         readNode(head);
         while (true) {
@@ -656,8 +656,8 @@ void BPT<User>::logout() {
     }
 }
 
-template class BPT<User>;
-template class BPT<Train>;
-template class BPT<StationInfo>;
-template class BPT<Order>;
-template class BPT<PendingOrder>;
+template class BPT<User, 30>;
+template class BPT<Train, 8>;
+template class BPT<StationInfo, 48>;
+template class BPT<Order, 20>;
+template class BPT<PendingOrder, 20>;

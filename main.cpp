@@ -13,11 +13,11 @@
 #include "./STLite/vector/vector.hpp"
 #include "./STLite/map/map.hpp"
 
-BPT<User> userBPT("user");
-BPT<Train> trainBPT("train");
-BPT<StationInfo> stationBPT("station");
-BPT<Order> orderBPT("order");
-BPT<PendingOrder> pendingOrderBPT("pendingOrder");
+BPT<User, 30> userBPT("user");
+BPT<Train, 8> trainBPT("train");
+BPT<StationInfo, 48> stationBPT("station");
+BPT<Order, 20> orderBPT("order");
+BPT<PendingOrder, 20> pendingOrderBPT("pendingOrder");
 TicketInfo ticketInfo{};
 
 std::fstream system_file;
@@ -54,7 +54,6 @@ int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(nullptr);
     std::cout.tie(nullptr);
-    //freopen("output.txt", "w", stdout);
     initialise();
     std::string command;
     while (getline(std::cin, command)) {
@@ -194,6 +193,7 @@ int main() {
                     for (int i = 0; i < vec[0].stationNum; i++) {
                         std::string stationN(vec[0].stations[i]);
                         StationInfo newStationInfo{stationN, tokens._i, vec[0].arriveTime[i], vec[0].setOffTime[i]};
+                        newStationInfo.stationIndex = i;
                         stationBPT.addData(newStationInfo);
                     }
                     sjtu::vector<int> soldTicket;
@@ -497,14 +497,6 @@ int main() {
         }
     }
     flush();
-
-    /*userBPT.clear();
-    trainBPT.clear();
-    stationBPT.clear();
-    orderBPT.clear();
-    pendingOrderBPT.clear();
-    std::remove("system_file");
-    std::remove("ticket_file");*/
 }
 
 sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, const std::string& _d) {
@@ -522,12 +514,7 @@ sjtu::vector<Ticket> queryTicket(const std::string& _s, const std::string& _t, c
                 sjtu::vector<Train> tmp = trainBPT.findData(Train{trainI});
                 if (!tmp.empty()) {
                     if (tmp[0].saleDate[0] <= md - vec1[pos1].setOffTime.dd && tmp[0].saleDate[1] >= md - vec1[pos1].setOffTime.dd) {
-                        int startIndex = 0, endIndex = 0;
-                        for (int i = 0; i < tmp[0].stationNum; i++) {
-                            std::string stationName{tmp[0].stations[i]};
-                            if (stationName == _s) {startIndex = i;}
-                            if (stationName == _t) {endIndex = i;}
-                        }
+                        int startIndex = vec1[pos1].stationIndex, endIndex = vec2[pos2].stationIndex;
                         if (startIndex >= endIndex) {goto End_;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
@@ -578,12 +565,7 @@ Ticket queryNextTicketByTime(const std::string& _s, const std::string& _t, const
                             _md = md + 1;
                             if (_md - vec1[pos1].setOffTime.dd > tmp[0].saleDate[1]) {goto End;}
                         }
-                        int startIndex = 0, endIndex = 0;
-                        for (int i = 0; i < tmp[0].stationNum; i++) {
-                            std::string stationName{tmp[0].stations[i]};
-                            if (stationName == _s) {startIndex = i;}
-                            if (stationName == _t) {endIndex = i;}
-                        }
+                        int startIndex = vec1[pos1].stationIndex, endIndex = vec2[pos2].stationIndex;
                         if (startIndex >= endIndex) {goto End;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;
@@ -634,12 +616,7 @@ Ticket queryNextTicketByCost(const std::string& _s, const std::string& _t, const
                             _md = md + 1;
                             if (_md - vec1[pos1].setOffTime.dd > tmp[0].saleDate[1]) {goto End;}
                         }
-                        int startIndex = 0, endIndex = 0;
-                        for (int i = 0; i < tmp[0].stationNum; i++) {
-                            std::string stationName{tmp[0].stations[i]};
-                            if (stationName == _s) {startIndex = i;}
-                            if (stationName == _t) {endIndex = i;}
-                        }
+                        int startIndex = vec1[pos1].stationIndex, endIndex = vec2[pos2].stationIndex;
                         if (startIndex >= endIndex) {goto End;}
                         sjtu::vector<int> ticketI = ticketInfo.readTicketInfo(tmp[0].ticketInfoIndex + ((_md - vec1[pos1].setOffTime.dd) - tmp[0].saleDate[0]) * tmp[0].stationNum, tmp[0].stationNum);
                         int _maxSeat = -1;

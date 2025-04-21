@@ -9,9 +9,7 @@
 #include "../include/Order.h"
 #include "../STLite/vector/vector.hpp"
 
-constexpr int node_size = 32;
-
-template <typename T>
+template <typename T, int node_size>
 class BPT {
     struct Node {
         int index = -1;
@@ -25,7 +23,7 @@ class BPT {
         int next = -1;
     };
 
-    int root = -1;
+   int root = -1;
     int head = -1;
     int new_id = 0;
 
@@ -38,8 +36,8 @@ class BPT {
 
 public:
     explicit BPT(const std::string &file_name) {
-        basic_file_name = "basic_" + file_name;
-        node_file_name = "node_" + file_name;
+        basic_file_name = "_basic_" + file_name;
+        node_file_name = "_node_" + file_name;
 
         node_file.open(node_file_name, std::ios::in|std::ios::out);
         if (!node_file.is_open()) {
@@ -62,6 +60,7 @@ public:
             basic_file.read(reinterpret_cast<char*> (&root), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&head), sizeof(int));
             basic_file.read(reinterpret_cast<char*> (&new_id), sizeof(int));
+            node_file.seekp(root * sizeof(Node));
         }
         basic_file.close();
     }
@@ -71,7 +70,6 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        basic_file.close();
         node_file.close();
     }
 

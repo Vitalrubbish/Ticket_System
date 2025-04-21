@@ -6,6 +6,7 @@
 struct StationInfo {
     char station[31]{};
     char trainID[21]{};
+    int stationIndex = -1;
     HourMinute arriveTime{};
     HourMinute setOffTime{};
 

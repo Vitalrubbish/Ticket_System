@@ -12,12 +12,14 @@
 #include "./include/Order.h"
 #include "./STLite/vector/vector.hpp"
 #include "./STLite/map/map.hpp"
+#include "./include/stationHash.h"
 
 BPT<User, 32> userBPT("user");
 BPT<Train, 6> trainBPT("train");
 BPT<StationInfo, 48> stationBPT("station");
 BPT<Order, 24> orderBPT("order");
 BPT<PendingOrder, 24> pendingOrderBPT("pendingOrder");
+extern StationHash stationHash("stationHash");
 TicketInfo ticketInfo{};
 
 std::fstream system_file;
@@ -157,8 +159,12 @@ int main() {
         if (tokens.op_name == "add_train") {
             sjtu::vector<Train> vec = trainBPT.findData(Train{tokens._i});
             if (vec.empty()) {
-                Train newTrain{tokens._i, tokens._n, tokens._m, tokens._s, tokens._p,
+                Train newTrain{tokens._i, tokens._n, tokens._m, tokens._p,
                     tokens._x, tokens._t, tokens._o, tokens._d, tokens._y};
+                sjtu::vector<std::string> stationName = split(tokens._s, '|');
+                for (int i = 0; i < newTrain.stationNum; i++) {
+                    newTrain.stations[i] = stationHash.queryHash(stationName[i]);
+                }
                 trainBPT.addData(newTrain);
                 std::cout << 0 << '\n';
             }
@@ -191,7 +197,7 @@ int main() {
                     newTicketInfoIndex += len;
                     trainBPT.modifyData(Train{tokens._i}, vec[0]);
                     for (int i = 0; i < vec[0].stationNum; i++) {
-                        std::string stationN(vec[0].stations[i]);
+                        std::string stationN = stationHash.get(vec[0].stations[i]);
                         StationInfo newStationInfo{stationN, tokens._i, vec[0].arriveTime[i], vec[0].setOffTime[i]};
                         newStationInfo.stationIndex = i;
                         stationBPT.addData(newStationInfo);
@@ -220,25 +226,25 @@ int main() {
                     std::cout << vec[0].trainID << ' ' << vec[0].type << '\n';
                     if (vec[0].release) {
                         sjtu::vector<int> soldT = ticketInfo.readTicketInfo(vec[0].ticketInfoIndex + vec[0].stationNum * (md - vec[0].saleDate[0]), vec[0].stationNum);
-                        std::cout << vec[0].stations[0] << " xx-xx xx:xx -> " << md << ' '
+                        std::cout << stationHash.get(vec[0].stations[0]) << " xx-xx xx:xx -> " << md << ' '
                                   << vec[0].setOffTime[0] << ' ' << vec[0].prices[0] << ' ' << vec[0].seatNum - soldT[0] << '\n';
                         for (int i = 1; i < vec[0].stationNum - 1; i++) {
-                            std::cout << vec[0].stations[i] << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
+                            std::cout << stationHash.get(vec[0].stations[i])  << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
                                       << md + vec[0].setOffTime[i].dd << ' ' << vec[0].setOffTime[i] << ' ' << vec[0].prices[i] << ' '
                                       << vec[0].seatNum - soldT[i] << '\n';
                         }
-                        std::cout << vec[0].stations[vec[0].stationNum - 1] << ' ' << md + vec[0].arriveTime[vec[0].stationNum - 1].dd << ' ' << vec[0].arriveTime[vec[0].stationNum - 1]
+                        std::cout << stationHash.get(vec[0].stations[vec[0].stationNum - 1]) << ' ' << md + vec[0].arriveTime[vec[0].stationNum - 1].dd << ' ' << vec[0].arriveTime[vec[0].stationNum - 1]
                                   << " -> xx-xx xx:xx " << vec[0].prices[vec[0].stationNum - 1] << " x\n";
                     }
                     else {
-                        std::cout << vec[0].stations[0] << " xx-xx xx:xx -> " << md << ' '
+                        std::cout << stationHash.get(vec[0].stations[0])  << " xx-xx xx:xx -> " << md << ' '
                                   << vec[0].setOffTime[0] << ' ' << vec[0].prices[0] << ' ' << vec[0].seatNum << '\n';
                         for (int i = 1; i < vec[0].stationNum - 1; i++) {
-                            std::cout << vec[0].stations[i] << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
+                            std::cout << stationHash.get(vec[0].stations[i])  << ' ' << md + vec[0].arriveTime[i].dd << ' ' << vec[0].arriveTime[i] << " -> "
                                       << md + vec[0].setOffTime[i].dd << ' ' << vec[0].setOffTime[i] << ' ' << vec[0].prices[i] << ' '
                                       << vec[0].seatNum << '\n';
                         }
-                        std::cout << vec[0].stations[vec[0].stationNum - 1] << ' ' << md + vec[0].arriveTime[vec[0].stationNum - 1].dd << ' ' << vec[0].arriveTime[vec[0].stationNum - 1]
+                        std::cout << stationHash.get(vec[0].stations[vec[0].stationNum - 1]) << ' ' << md + vec[0].arriveTime[vec[0].stationNum - 1].dd << ' ' << vec[0].arriveTime[vec[0].stationNum - 1]
                                   << " -> xx-xx xx:xx " << vec[0].prices[vec[0].stationNum - 1] << " x\n";
                     }
                 }
@@ -271,7 +277,7 @@ int main() {
                 sjtu::vector<Train> trainV = trainBPT.findData(Train{_trainID});
                 if (md - i.setOffTime.dd >= trainV[0].saleDate[0] && md - i.setOffTime.dd <= trainV[0].saleDate[1]) {
                     for (int j = trainV[0].stationNum - 1; j > i.stationIndex; j--) {
-                        std::string _station(trainV[0].stations[j]);
+                        std::string _station = stationHash.get(trainV[0].stations[j]);
                         if (!transferS.count(_station)) {transferS[_station] = 1;}
                     }
                 }
@@ -280,7 +286,7 @@ int main() {
                 std::string _trainID(i.trainID);
                 sjtu::vector<Train> trainV = trainBPT.findData(Train{_trainID});
                 for (int j = 0; j < i.stationIndex; j++) {
-                    std::string _station(trainV[0].stations[j]);
+                    std::string _station = stationHash.get(trainV[0].stations[j]);
                     if (transferS.count(_station) && transferS[_station] != 0) {
                         transferStation.push_back(_station);
                         transferS[_station] = 0;
@@ -337,6 +343,9 @@ int main() {
             }
         }
         if (tokens.op_name == "buy_ticket") {
+            if (tokens.timeSlot == "[25725]") {
+                int a = 1;
+            }
             sjtu::vector<User> vec0 = userBPT.findData(User{tokens._u});
             if (!vec0.empty() && vec0[0].login) {
                 sjtu::vector vec1 = trainBPT.findData(Train{tokens._i});
@@ -346,7 +355,7 @@ int main() {
                     int startIndex = -1, endIndex = -1;
                     HourMinute _setOffTime{}, _arriveTime{};
                     for (int i = 0; i < vec1[0].stationNum; i++) {
-                        std::string stationN(vec1[0].stations[i]);
+                        std::string stationN = stationHash.get(vec1[0].stations[i]);
                         if (stationN == tokens._f) {
                             startIndex = i;
                             _setOffTime = vec1[0].setOffTime[i];
@@ -433,7 +442,7 @@ int main() {
                         sjtu::map<std::string, int> stationIndex;
                         int startIndex = -1, endIndex = -1;
                         for (int i = 0; i < vec1[0].stationNum; i++) {
-                            stationIndex[vec1[0].stations[i]] = i;
+                            stationIndex[stationHash.get(vec1[0].stations[i])] = i;
                         }
                         startIndex = stationIndex[curOrder.setOffStation];
                         endIndex = stationIndex[curOrder.arriveStation];

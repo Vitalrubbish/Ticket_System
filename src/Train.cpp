@@ -1,25 +1,21 @@
 #include "../include/Train.h"
 #include "../include/tools.h"
-
+#include "../include/stationHash.h"
 Train::Train(const std::string& _i) {
     hashCode = HashByByte(_i);
 }
 
 Train::Train(const std::string& _i, const std::string& _n, const std::string& _m,
-    const std::string& _s, const std::string& _p, const std::string& _x,
+    const std::string& _p, const std::string& _x,
     const std::string& _t, const std::string& _o, const std::string& _d,
     const std::string& _y) {
     std::strcpy(trainID, _i.c_str());
     hashCode = HashByByte(_i);
     stationNum = stringToInt(_n);
     seatNum = stringToInt(_m);
-    sjtu::vector<std::string> stationName = split(_s, '|');
-    for (std::size_t i = 0; i < stationName.size(); i++) {
-        std::strcpy(stations[i], stationName[i].c_str());
-    }
     sjtu::vector<std::string> price = split(_p, '|');
     prices[0] = 0;
-    for (std::size_t i = 0; i < stationName.size() - 1; i++) {
+    for (std::size_t i = 0; i < stationNum - 1; i++) {
         prices[i + 1] = prices[i] + stringToInt(price[i]);
     }
     sjtu::vector<std::string> startT = split(_x, ':');

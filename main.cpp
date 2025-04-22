@@ -343,9 +343,6 @@ int main() {
             }
         }
         if (tokens.op_name == "buy_ticket") {
-            if (tokens.timeSlot == "[25725]") {
-                int a = 1;
-            }
             sjtu::vector<User> vec0 = userBPT.findData(User{tokens._u});
             if (!vec0.empty() && vec0[0].login) {
                 sjtu::vector vec1 = trainBPT.findData(Train{tokens._i});
@@ -354,13 +351,14 @@ int main() {
                     MonthDate md{stringToInt(mm_dd[0]), stringToInt(mm_dd[1])};
                     int startIndex = -1, endIndex = -1;
                     HourMinute _setOffTime{}, _arriveTime{};
+                    int hashCode1 = stationHash.queryHash(tokens._f);
+                    int hashCode2 = stationHash.queryHash(tokens._t);
                     for (int i = 0; i < vec1[0].stationNum; i++) {
-                        std::string stationN = stationHash.get(vec1[0].stations[i]);
-                        if (stationN == tokens._f) {
+                        if (vec1[0].stations[i] == hashCode1) {
                             startIndex = i;
                             _setOffTime = vec1[0].setOffTime[i];
                         }
-                        if (stationN == tokens._t) {
+                        if (vec1[0].stations[i] == hashCode2) {
                             endIndex = i;
                             _arriveTime = vec1[0].arriveTime[i];
                         }

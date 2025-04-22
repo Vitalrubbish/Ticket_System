@@ -16,7 +16,7 @@ struct StationHash {
             file.open(file_name, std::ios::out);
             file.close();
             file.open(file_name, std::ios::in|std::ios::out);
-            file.seekp(MOD * 33);
+            file.seekp(MOD * 31 - 1);
             file.write("", 1);
         }
         state_file.open("state_" + file_name, std::ios::in|std::ios::out);

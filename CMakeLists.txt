@@ -18,7 +18,7 @@ add_executable(code
         include/StationInfo.h
         include/Tickets.h
         include/Order.h
-        include/StationHash.h
+        include/stationHash.h
 
         src/tokenscanner.cpp
         src/HourMinute.cpp

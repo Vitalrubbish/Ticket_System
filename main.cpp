@@ -15,7 +15,7 @@
 #include "./include/stationHash.h"
 
 BPT<User, 32> userBPT("user");
-BPT<Train, 6> trainBPT("train");
+BPT<Train, 8> trainBPT("train");
 BPT<StationInfo, 48> stationBPT("station");
 BPT<Order, 24> orderBPT("order");
 BPT<PendingOrder, 24> pendingOrderBPT("pendingOrder");

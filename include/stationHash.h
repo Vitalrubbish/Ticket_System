@@ -45,7 +45,8 @@ struct StationHash {
             ans = (ans * pr + i) % MOD;
         }
         ans = (ans + MOD) % MOD;
-        while (state[ans] == 1 && get(ans) != str) {
+        while (state[ans] == 1) {
+            if (get(ans) == str) {return ans;}
             ans = (ans + 1) % MOD;
         }
         state[ans] = 1;

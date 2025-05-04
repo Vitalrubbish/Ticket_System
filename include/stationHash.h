@@ -3,12 +3,12 @@
 #include <string>
 #include <cstring>
 #include <fstream>
-const int MOD = 1e6 + 3;
+const int MOD_ = 1e6 + 3;
 const int pr = 31;
 struct StationHash {
     std::fstream file;
     std::fstream state_file;
-    int state[MOD] = {};
+    int state[MOD_] = {};
 
     explicit StationHash(const std::string& file_name) {
         file.open(file_name, std::ios::in|std::ios::out);
@@ -16,7 +16,7 @@ struct StationHash {
             file.open(file_name, std::ios::out);
             file.close();
             file.open(file_name, std::ios::in|std::ios::out);
-            file.seekp(MOD * 31 - 1);
+            file.seekp(MOD_ * 31 - 1);
             file.write("", 1);
         }
         state_file.open("state_" + file_name, std::ios::in|std::ios::out);
@@ -26,13 +26,13 @@ struct StationHash {
             state_file.open("state_" + file_name, std::ios::in|std::ios::out);
         }
         else {
-            state_file.read(reinterpret_cast<char*>(state), MOD * sizeof(int));
+            state_file.read(reinterpret_cast<char*>(state), MOD_ * sizeof(int));
         }
     }
 
     ~StationHash() {
         state_file.seekp(0);
-        state_file.write(reinterpret_cast<char*>(state), MOD * sizeof(int));
+        state_file.write(reinterpret_cast<char*>(state), MOD_ * sizeof(int));
         state_file.close();
         file.close();
     }
@@ -42,12 +42,12 @@ struct StationHash {
         std::strcpy(str_, str.c_str());
         int ans = 0;
         for (auto& i: str) {
-            ans = (ans * pr + i) % MOD;
+            ans = (ans * pr + i) % MOD_;
         }
-        ans = (ans + MOD) % MOD;
+        ans = (ans + MOD_) % MOD_;
         while (state[ans] == 1) {
             if (get(ans) == str) {return ans;}
-            ans = (ans + 1) % MOD;
+            ans = (ans + 1) % MOD_;
         }
         state[ans] = 1;
         file.seekp(ans * 31);

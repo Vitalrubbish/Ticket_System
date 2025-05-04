@@ -3,14 +3,27 @@
 
 template <typename T, int node_size>
 void BPT<T, node_size>::readNode(const int& index_) {
-    node_file.seekp(index_ * sizeof(Node));
-    node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node));
+    if (cache.checkExist(index_)) {
+        cur = cache.get(index_);
+    }
+    else {
+        node_file.seekp(index_ * sizeof(Node));
+        node_file.read(reinterpret_cast<char*>(&cur), sizeof(Node));
+    }
 }
 
 template <typename T, int node_size>
 void BPT<T, node_size>::writeNode(Node node, const int &index_) {
-    node_file.seekp(index_ * sizeof(Node));
-    node_file.write(reinterpret_cast<char*>(&node), sizeof(Node));
+    cache.put(index_, node);
+    if (cache.size() > max_size_) {
+        int evict_id = cache.lis.front().index;
+        Node element = cache.get(evict_id);
+        cache.lis.pop_back();
+        cache.position.erase(evict_id);
+        cache.hashTable.erase(evict_id);
+        node_file.seekp(evict_id * sizeof(Node));
+        node_file.write(reinterpret_cast<char*>(&element), sizeof(Node));
+    }
 }
 
 template <typename T, int node_size>

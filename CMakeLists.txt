@@ -7,6 +7,8 @@ add_executable(code
         main.cpp
         database/BPT.h
         database/BPT.cpp
+        database/CacheManager.h
+        database/HashTable.h
 
         include/tokenscanner.h
         include/HourMinute.h
@@ -34,4 +36,5 @@ add_executable(code
         STLite/map/exceptions.hpp
         STLite/map/utility.hpp
         STLite/map/map.hpp
+        STLite/list/list.hpp
 )

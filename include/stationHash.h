@@ -8,7 +8,7 @@ const int pr = 31;
 struct StationHash {
     std::fstream file;
     std::fstream state_file;
-    int state[MOD_] = {};
+    bool state[MOD_] = {};
 
     explicit StationHash(const std::string& file_name) {
         file.open(file_name, std::ios::in|std::ios::out);
@@ -26,13 +26,13 @@ struct StationHash {
             state_file.open("state_" + file_name, std::ios::in|std::ios::out);
         }
         else {
-            state_file.read(reinterpret_cast<char*>(state), MOD_ * sizeof(int));
+            state_file.read(reinterpret_cast<char*>(state), MOD_ * sizeof(bool));
         }
     }
 
     ~StationHash() {
         state_file.seekp(0);
-        state_file.write(reinterpret_cast<char*>(state), MOD_ * sizeof(int));
+        state_file.write(reinterpret_cast<char*>(state), MOD_ * sizeof(bool));
         state_file.close();
         file.close();
     }

@@ -8,7 +8,6 @@
 #include "../include/StationInfo.h"
 #include "../include/Order.h"
 #include "../STLite/vector/vector.hpp"
-#include "CacheManager.h"
 
 template <typename T, int node_size>
 class BPT {
@@ -23,7 +22,6 @@ class BPT {
         int next = -1;
     };
 
-    CacheManager<Node> cache;
     int root = -1;
     int head = -1;
     int new_id = 0;
@@ -37,8 +35,8 @@ class BPT {
 
 public:
     explicit BPT(const std::string &file_name) {
-        basic_file_name = "_basic_" + file_name;
-        node_file_name = "_node_" + file_name;
+        basic_file_name = "basic_" + file_name;
+        node_file_name = "node_" + file_name;
 
         node_file.open(node_file_name, std::ios::in|std::ios::out);
         if (!node_file.is_open()) {
@@ -71,15 +69,6 @@ public:
         basic_file.write(reinterpret_cast<char*> (&root), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&head), sizeof(int));
         basic_file.write(reinterpret_cast<char*> (&new_id), sizeof(int));
-        while (!cache.lis.empty()) {
-            int evict_id = cache.lis.front().index;
-            Node element = cache.get(evict_id);
-            cache.lis.pop_back();
-            cache.position.erase(evict_id);
-            cache.hashTable.erase(evict_id);
-            node_file.seekp(evict_id * sizeof(Node));
-            node_file.write(reinterpret_cast<char*>(&element), sizeof(Node));
-        }
         node_file.close();
     }
 

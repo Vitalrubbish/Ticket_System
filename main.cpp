@@ -53,9 +53,6 @@ Ticket queryNextTicketByTime(const std::string&, const std::string&, const std::
 Ticket queryNextTicketByCost(const std::string&, const std::string&, const std::string&, const Ticket&);
 
 int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cout.tie(nullptr);
     initialise();
     std::string command;
     while (getline(std::cin, command)) {

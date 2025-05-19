@@ -6,11 +6,11 @@
 struct Train {
     char trainID[21]{};
     int stationNum = -1;
-    int stations[100]{};
+    int stations[25]{};
     int seatNum = -1;
-    int prices[99]{}; // 处理成前缀和
-    HourMinute setOffTime[100]{};
-    HourMinute arriveTime[100]{};
+    int prices[24]{}; // 处理成前缀和
+    HourMinute setOffTime[25]{};
+    HourMinute arriveTime[25]{};
     MonthDate saleDate[2]{};
     char type{};
     bool release = false; // 该列车是否被发布
